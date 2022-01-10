@@ -1,0 +1,28 @@
+{% load i18n %}
+
+{% block subject %}
+{% blocktrans %}Account activation on {{ site_name }}{% endblocktrans %}
+{% endblock subject %}
+
+{% block text_body %}
+{{ site_name }}　に登録されたアカウントを有効化されるため、このメールが送信されました。
+
+以下のページにて、アカウントを有効化してください。
+https://{{ domain }}/{{ url|safe }}
+
+いつもご利用いただき、ありがとうございました。
+
+From Pingo
+{% blocktrans %}The {{ site_name }} team{% endblocktrans %}
+{% endblock text_body %}
+
+{% block html_body %}
+<p>{{ site_name }}　に登録されたアカウントを有効化されるため、このメールが送信されました。</p>
+
+<p>以下のページにて、アカウントを有効化してください。</p>
+<p><a href="https://{{ domain }}/{{ url|safe }}">https://{{ domain }}/{{ url|safe }}</a></p>
+
+<p>いつもご利用いただき、ありがとうございました。</p>
+
+<p>Pingo</p>
+{% endblock html_body %}

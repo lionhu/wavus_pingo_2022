@@ -1,0 +1,347 @@
+{
+  "auth": {
+    "login": "ログイン",
+    "logout": "ログアウト",
+    "username": "ユーザー名",
+    "email": "メール",
+    "password": "パスワード",
+    "confirm_password": "パスワード確認",
+    "forget_password": "パスワードをお忘れの場合",
+    "forget_password_title": "パスワード　再設定",
+    "forget_password_message": "PinGoアカウントに関連付けられているEメールアドレスを入力してください。",
+    "change_password_title": "パスワード変更",
+    "register": "登録",
+    "wanto_register": "会員新規登録",
+    "already_registered": "アカウントをすでにお持ちですか？ログイン",
+    "different_password": "パスワード及びパスワード確認は同じでしょうか？",
+    "valid_email": "有効なメールアドレス",
+    "invalid_email": "無効なメールアドレス",
+    "email_verify_code": "メール認証コード",
+    "Verify_Email_introcode_01": "メール認証コード",
+    "auth_failure": "認証失敗しました。",
+    "require_login": "ログインが必要",
+    "require_email": "メールアドレスの入力が必要",
+    "require_vaild_email": "有効なメールアドレスの入力が必要",
+    "require_password": "パスワードの入力が必要",
+    "email_verify_code_invalid": "メール認証コードは正しいでしょうか",
+    "email_verify_code_require": "メール認証コードの入力が必要"
+  },
+  "services": {
+    "tomo_sales": {
+      "title": "トモ買",
+      "alias": "共同購入"
+    },
+    "share_sales":{
+      "title": "シェア買",
+      "alias": "紹介購入"
+    }
+  },
+  "menu": {
+    "dashboard": "マイページ",
+    "orderlist": "注文履歴",
+    "pingo_orderlist": "共同購入履歴",
+    "all": "すべて",
+    "management": "管理画面",
+    "category": "カテゴリー"
+  },
+  "organization": {
+    "client_superadmin": "総代理店",
+    "client_admin": "代理店",
+    "level_2": "レベル２",
+    "level_1": "レベル１",
+    "user_self": "本人"
+  },
+  "dashboard": {
+    "account_info": "アカウント情報",
+    "introcode": "紹介用QR",
+    "family_tree": "PinGoツリー",
+    "followers": "マイチーム",
+    "banktranser_name": "振込依頼人",
+    "address": "輸送先情報",
+    "summary": "サマリー",
+    "avatar": "アバター"
+  },
+  "dashboard_menu": {
+    "summary": "サマリー",
+    "account_info": "アカウント情報",
+    "orders": "シェア買履歴",
+    "pingo_orders": "トモ買履歴",
+    "points": "ポイント履歴",
+    "viewproducts": "閲覧履歴"
+  },
+  "product": {
+    "new": "新着商品",
+    "best_sales": "売れ筋商品",
+    "about": "製品概要",
+    "sold_out": "売切れ",
+    "in_stock": "在庫あり",
+    "description": "製品紹介",
+    "details": "製品仕様",
+    "video": "紹介動画",
+    "low_stock": "在庫はわずかになりました: "
+  },
+  "welcome": "PinGo モールへようこそ！",
+  "contact": {
+    "title": "お問合",
+    "username": "名前",
+    "email": "メール",
+    "phone": "連絡電話番号",
+    "message": "メッセージ",
+    "btn_send_message": "送信"
+  },
+  "home": "ホーム",
+  "image": "写真",
+  "productname": "製品名",
+  "price": "価格",
+  "date": "日付",
+  "amount": "金額",
+  "type": "種類",
+  "availabilities": "在庫状況",
+  "continue_shopping": "お買い物を続ける",
+  "empty_wishlist": "お気に入りは空です",
+  "quickview": {
+    "title": "製品紹介",
+    "detail": "詳細",
+    "add_to_cart": "カートへ追加"
+  },
+  "cart_info": {
+    "title": "ショッピングカート",
+    "product": "商品",
+    "short_title": "カート",
+    "empty_cart": "カートは空です。",
+    "quantity": "数量",
+    "total": "合計",
+    "total_without_tax": "合計(税抜き)",
+    "remove": "削除",
+    "checkout": "購入手続き",
+    "pay": "支払い",
+    "continue_shopping": "続けて買い物",
+    "shoppingcart_items": "買物リスト",
+    "tax": "消費税",
+    "total_beforetax": "合計（税抜き）",
+    "taxed_total": "合計（税込）",
+    "get_bonus": "獲得ポイント",
+    "use_point": "利用ポイント",
+    "can_use_next": "（次回の購入時、ご利用できます。）",
+    "chargeAmount": "決済金額"
+  },
+  "payment_creditcard": {
+    "charge_amount": "決済金額",
+    "pay_by_card": "クレジットカードでの支払い",
+    "sq-card-number": "カード番号",
+    "sq-cvv": "検証番号",
+    "sq-expiration-date": "有効期限"
+  },
+  "checkout": {
+    "title": "購入手続き",
+    "shippingadress": "送付先",
+    "name": "名前",
+    "phone": "電話",
+    "email": "メール",
+    "postcode": "郵便番号",
+    "state": "都道府県",
+    "city": "市",
+    "town": "町",
+    "address_1": "住所 1",
+    "address_2": "住所 2",
+    "reset": "編集",
+    "transfer": "振込依頼人",
+    "set_transfer": "振込依頼人設定",
+    "credit_card": "クレジットカードの支払い",
+    "bank_transfer": "銀行振込",
+    "change": "変更",
+    "confirm": "確定",
+    "cancel": "キャンセル",
+    "pay": "支払いへ",
+    "payment_method": {
+      "CARD": "カード払い",
+      "POINT": "ポイント払い"
+    }
+  },
+  "delete": "削除",
+  "confirm_remove_order": "注文を削除しますか？",
+  "edit_address": "送付先を修正",
+  "addressbook": {
+    "title": "アドレス帳",
+    "address": {
+      "title": "送付先",
+      "register": "新規送付先"
+    },
+    "buttons": {
+      "use_address": "この送付先を使う",
+      "delete_address": "送付先を削除する",
+      "need_address": "送付先情報を設定してください。"
+    }
+  },
+  "buttons": {
+    "submit": "確定",
+    "close": "閉じる",
+    "cancel": "取消"
+  },
+  "orderlist": {
+    "TO": "宛先",
+    "order": "注文",
+    "type": "種類",
+    "delivery": "配達",
+    "payment_status": "支払",
+    "order_detail": "注文詳細",
+    "invoice": "領収書",
+    "cancel": "注文キャンセル"
+  },
+  "pingo_order": {
+    "type": {
+      "ALL": {
+        "text": "すべて",
+        "class": "primary"
+      },
+      "RECRUITING": {
+        "text": "応募中注文",
+        "class": "warning"
+      },
+      "ESTABLISHED": {
+        "text": "成立注文",
+        "class": "success"
+      },
+      "RELEASED": {
+        "text": "不成立注文",
+        "class": "danger"
+      }
+    }
+  },
+  "pingo_product": {
+    "specification": {
+      "currentNum": {
+        "text": "応募数量",
+        "class": "primary"
+      },
+      "targetNum": {
+        "text": "募集目標",
+        "class": "warning"
+      },
+      "until_at": {
+        "text": "締切日",
+        "class": "success"
+      },
+      "remaining_time": "残り時間"
+    },
+    "status": {
+      "expired": {
+        "text": "募集終了",
+        "class": "danger"
+      }
+    }
+  },
+  "pointlist": {
+    "point": "ポイント",
+    "valid": "有効",
+    "point_transfer": "ポイント贈呈",
+    "walletID": "あなたのWalletID",
+    "receiver_walletID": "お友達のWalletID",
+    "valid_point": "利用可能なポイント",
+    "valid_point_info": "買い物に使える有効なポイント。",
+    "invalid_point": "承認待ちポイント",
+    "invalid_point_info": "毎月月末、一括承認される予定のポイントです。当面は買い物にご利用いただけません。しばらくお待ちください。",
+    "total_point": "ポイント合計",
+    "point_type": {
+      "ORDER_CANCELED": {
+        "title": "ポイント注文取消",
+        "type_class": "success",
+        "amount_prefix": "+"
+      },
+      "JOINBONUS_POINT": {
+        "title": "会員加入",
+        "type_class": "success",
+        "amount_prefix": "+"
+      },
+      "INTRODUCE_POINT": {
+        "title": "メンバー入会紹介",
+        "type_class": "success",
+        "amount_prefix": "+"
+      },
+      "PURCHASE_ORDER": {
+        "title": "購入利用",
+        "type_class": "danger",
+        "amount_prefix": "-"
+      },
+      "DesendentOrderPoint": {
+        "title": "製品紹介購入",
+        "type_class": "primary",
+        "amount_prefix": "+"
+      },
+      "OrderBonus": {
+        "title": "購入取得ボーナス",
+        "type_class": "success",
+        "amount_prefix": "+"
+      },
+      "REFOUND_FROM_DELETED_ORDER": {
+        "title": "使用ポイント取消",
+        "type_class": "warning",
+        "amount_prefix": "+"
+      },
+      "TRANSFER_OUT": {
+        "title": "ポイント譲渡",
+        "type_class": "success",
+        "amount_prefix": "-"
+      },
+      "TRANSFER_IN": {
+        "title": "ポイント受取",
+        "type_class": "success",
+        "amount_prefix": "+"
+      }
+    }
+  },
+  "point_menu": {
+    "title": "ポイント履歴"
+  },
+  "wishlist": {
+    "title": "お気に入り",
+    "addto": "お気に入りに追加",
+    "added": "お気に入りに追加しました",
+    "existed": "すでに追加されました。",
+    "failed": "お気に入りに追加できませんでした。"
+  },
+  "client_admin": {
+    "menu": {
+      "followers": "フォロワー",
+      "followers_list": "フォロワー リスト",
+      "followers_num": "フォロワー数",
+      "margin_settings": "マージン設定"
+    }
+  },
+  "followers": {
+    "text": "フォロワー"
+  },
+  "pingo": {
+    "text": "PinGo",
+    "about": "PinGoとは",
+    "mall": "PinGo モール",
+    "title": "Pingo!ショッピング",
+    "footer_about": "PinGoについて",
+    "ecommerce": "ご利用規約",
+    "privacy": "プライバシーポリシー"
+
+  },
+  "piontlist_menu": {
+    "found_records": "{0} 記録が検索されました。"
+  },
+  "vendor": {
+    "title": "メーカー情報",
+    "name": "メーカー",
+    "brand": "ブランド",
+    "series": "シーリズ",
+    "model": "モデル",
+    "contact_info": "対応窓口情報",
+    "basic_info": "基本情報",
+    "input_delivery_info": "配送情報入力"
+  },
+  "edit": "編集",
+  "save": "保存",
+  "ERR": {
+    "CreatePingoOrder": {
+      "01": "テストのエラーメッセージ"
+    },
+    "Auth": {
+      "AUTH_ERR_01": "メール及びパスワードの認証失敗"
+    }
+  }
+}

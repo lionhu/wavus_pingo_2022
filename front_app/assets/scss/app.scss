@@ -1,0 +1,78 @@
+@import 'font-awesome';
+@import 'themify';
+@import 'vue2-animate/src/sass/vue2-animate.scss';
+//@import 'vue-slider-component/dist-css/vue-slider-component.css';
+//@import 'vue-image-lightbox/dist/vue-image-lightbox.min.css';
+//@import '~vue-slider-component/lib/theme/default.scss';
+@import 'theme/variables';
+@import 'theme/style';
+@import 'theme/theme-dark';
+@import 'theme/menu';
+@import 'theme/responsive';
+
+@import 'config/default/variables';
+@import "custom/components/ribbons";
+
+:root {
+  --theme-deafult: #ff4c3b;
+  // This gradient color only for gym layout
+  --theme-gradient1: #01effc;
+  --theme-gradient2: #485ff2;
+}
+
+.theme-color {
+  color: var(--theme-deafult)!important;
+}
+
+.theme-bgcolor {
+  background-color: var(--theme-deafult) !important;
+  color: white !important;
+  padding: 5px;
+}
+
+.round-bg {
+  display: block;
+  width: 32px;
+  height: 32px;
+  border-radius: 100%;
+  z-index: 8;
+  color: #fff;
+  text-align: center;
+  background: var(--theme-deafult);
+  padding: 2px;
+  cursor: pointer;
+
+  & i {
+    margin: 0 !important;
+  }
+}
+
+.width-58 {
+  width: 58px !important;
+}
+
+
+.line-height-2 {
+  line-height: 1.2rem !important;
+}
+
+.line-height-4 {
+  line-height: 1.8rem!important;
+}
+
+.line-height-2rem{
+  line-height:2rem!important;
+}
+
+.nav-avatar {
+  border-radius: 100%;
+  border: solid 2px var(--theme-deafult);
+  max-height: 32px;
+}
+
+.text-ident-1{
+  text-indent: 1rem!important;
+}
+.text-ident-2{
+  text-indent: 2rem!important;
+}

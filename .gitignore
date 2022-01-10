@@ -1,0 +1,8 @@
+.idea/
+*.pid
+*.sock
+*.lock
+.DS_Store/
+ssl_certs/
+system/https_portal/logs/
+system/redis/redis_data/

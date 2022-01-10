@@ -1,0 +1,134 @@
+#mounted by lionhu
+<% if ENV['NPM_MODE'] %>
+    proxy_cache_path  /etc/nginx/cache levels=1:2 keys_zone=nuxt-cache:25m max_size=1g inactive=60m use_temp_path=off;
+
+    map $sent_http_content_type $expires {
+        "text/html"                 epoch;
+        "text/html; charset=utf-8"  epoch;
+        default                     off;
+    }
+<% end %>
+
+<% if domain.multiple_upstreams? %>
+upstream <%= domain.upstream_backend_name %> {
+    <% domain.upstreams.each do |upstream| %>
+        server <%= upstream[:address] %> <%= upstream[:parameters] %>;
+    <% end %>
+}
+<% end %>
+upstream django_daphne_ws {
+   server unix:/var/lib/https-portal/daphne/run/daphne.sock fail_timeout=0;
+}
+
+server {
+    listen 443 ssl http2;
+    <% if ENV['LISTEN_IPV6'] && ENV['LISTEN_IPV6'].downcase == 'true' %>
+    listen [::]:443 ssl http2;
+    <% end %>
+    server_name <%= domain.name %>;
+
+    client_max_body_size 10M;
+
+    ssl_certificate <%= domain.chained_cert_path %>;
+    ssl_certificate_key <%= domain.key_path %>;
+
+    ssl_session_cache shared:SSL:50m;
+    ssl_ciphers ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA;
+    ssl_prefer_server_ciphers on;
+
+    ssl_dhparam <%= dhparam_path %>;
+
+    error_page 403 404 500 502 503 504 error.html;
+
+    # Send HSTS header if configured
+    <% if ENV['HSTS_MAX_AGE'] %>
+       add_header Strict-Transport-Security "max-age=<%= ENV['HSTS_MAX_AGE'] %>" always;
+    <% end %>
+
+    <% if domain.access_restriction %>
+        <% domain.access_restriction.each do |ip| %>
+            allow <%= ip %>;
+        <% end %>
+        deny all;
+    <% end %>
+
+    <% if domain.basic_auth_enabled? %>
+        auth_basic "Password";
+        auth_basic_user_file <%= domain.htaccess_path %>;
+    <% end %>
+
+    <% if ENV['CUSTOM_NGINX_SERVER_CONFIG_BLOCK'] %>
+        <%= ENV['CUSTOM_NGINX_SERVER_CONFIG_BLOCK'] %>
+    <% end %>
+
+    <% if ENV["CUSTOM_NGINX_#{domain.env_format_name}_CONFIG_BLOCK"] %>
+        <%= ENV["CUSTOM_NGINX_#{domain.env_format_name}_CONFIG_BLOCK"] %>
+    <% end %>
+
+      location ^~ /staticfiles/ {
+        alias /var/www/staticfiles/;
+      }
+
+      location ^~ /mediafiles/ {
+        alias /var/www/mediafiles/;
+      }
+      location ^~ /backend/ {
+                alias /var/lib/https-portal/nuxtjs_admin/dist/;
+            }
+      location / {
+                alias /var/lib/https-portal/nuxtjs_front/dist/;
+                proxy_set_header Host $http_host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+                proxy_cache                 nuxt-cache;
+                proxy_cache_bypass          $arg_nocache; # probably better to change this
+                proxy_cache_valid           200 302  60m; # set this to your needs
+                proxy_cache_valid           404      1m;  # set this to your needs
+                proxy_cache_lock            on;
+                proxy_cache_use_stale error timeout http_500 http_502 http_503 http_504;
+                proxy_cache_key             $uri$is_args$args;
+                add_header X-Cache-Status $upstream_cache_status;
+            }
+
+    location ^~ /daphne/admin/ {
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $scheme;
+      proxy_set_header Host $http_host;
+      proxy_redirect off;
+      proxy_pass http://pingo_daphne:8000/daphne/admin/;
+    }
+
+    location ^~ /daphne/api/ {
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $scheme;
+      proxy_set_header Host $http_host;
+      proxy_redirect off;
+      proxy_pass http://pingo_daphne:8000/daphne/api/;
+    }
+
+    location ^~ /export_pdf/ {
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $scheme;
+      proxy_set_header Host $http_host;
+      proxy_redirect off;
+      proxy_pass http://pingo_daphne:8000/daphne/api/store/export_pdf/;
+    }
+
+      location ^~ /ws/ {
+        try_files $uri @daphne_ws;
+      }
+      location @daphne_ws {
+        proxy_pass http://django_daphne_ws;
+
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+
+        proxy_redirect off;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Host $server_name;
+    }
+}

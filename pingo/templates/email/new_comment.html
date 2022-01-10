@@ -1,0 +1,35 @@
+{% load i18n %}
+
+{% block subject %}
+新しい商品コメントが入りました！
+{% endblock subject %}
+
+{% block text_body %}
+下記の商品コメントが入りましたので、ご確認ください。
+商品名：{{item_name}}
+ユーザー名：{{username}}
+コメント内容：{{comment}}
+
+From Pingo
+{{company}}
+{% endblock text_body %}
+
+{% block html_body %}
+<p>下記の商品コメントが入りましたので、ご確認ください。</p>
+<ul>
+    <li>商品名：{{item_name}}</li>
+    <li>ユーザー名：{{username}}</li>
+    <li>コメント内容：{{comment}}</li>
+</ul>
+<p>
+    <a href="{{approve_url}}">承認</a>
+</p>
+<p>
+    <a href="{{disapproved_url}}">却下</a>
+</p>
+
+
+<p>Pingo</p>
+
+{{company}}
+{% endblock html_body %}

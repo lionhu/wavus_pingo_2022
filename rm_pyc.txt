@@ -1,0 +1,13 @@
+./pingo/celery_tasks/migrations/__pycache__/__init__.cpython-37.pyc
+./pingo/core/migrations/__pycache__/__init__.cpython-37.pyc
+./pingo/chat/migrations/__pycache__/0001_initial.cpython-37.pyc
+./pingo/chat/migrations/__pycache__/__init__.cpython-37.pyc
+./pingo/search_indexes/migrations/__pycache__/__init__.cpython-37.pyc
+./pingo/books/migrations/__pycache__/0001_initial.cpython-37.pyc
+./pingo/books/migrations/__pycache__/__init__.cpython-37.pyc
+./pingo/authentication/migrations/__pycache__/0001_initial.cpython-37.pyc
+./pingo/authentication/migrations/__pycache__/__init__.cpython-37.pyc
+./pingo/notifications/migrations/__pycache__/0001_initial.cpython-37.pyc
+./pingo/notifications/migrations/__pycache__/__init__.cpython-37.pyc
+./pingo/store/migrations/__pycache__/0001_initial.cpython-37.pyc
+./pingo/store/migrations/__pycache__/__init__.cpython-37.pyc

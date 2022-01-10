@@ -1,0 +1,160 @@
+@charset "UTF-8";
+@import url("https://fonts.googleapis.com/css?family=Tangerine|Pacifico|Source+Sans+Pro:400,700");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap");
+
+@page {
+    margin: 1cm;
+    @bottom-left {
+        color: #d3601a;
+        font-family: Pacifico;
+        content: '♥ Thank you!';
+    }
+    @bottom-right {
+        color: #a9a;
+        content: 'crs@wavus.jp | +81-50-3697-9239 | Tokyo.Japan';
+        font-family: Pacifico;
+        font-size: 9pt;
+    }
+    @top-right {
+        color: #d3601a;
+        font-family: Pacifico;
+        content: 'PinGo.jp';
+    }
+}
+
+html {
+    color: #14213d;
+    font-family:  Sawarabi Gothic;
+    font-size: 11pt;
+    line-height: 1.6;
+}
+
+html body {
+    margin: 0;
+    font-family: Sawarabi Gothic;
+}
+
+
+html small {
+    color: #a9a;
+}
+
+html h1 {
+    color: #d3601a;
+    /*font-family: "Noto Sans JP", serif;*/
+    font-family: Sawarabi Gothic;
+    text-shadow: 4px 4px 4px #aaa;
+    font-size: 64pt;
+    margin: 0;
+}
+
+html #p1dimg1 {
+   position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: -1;
+    width: 160px;
+    height: 160px;
+}
+
+html h3 {
+    color: #d3601a;
+    /*font-family: "Noto Sans JP", serif;*/
+    font-family: Sawarabi Gothic;
+    text-shadow: 4px 4px 4px #aaa;
+    font-size: 48pt;
+    margin: 0;
+}
+
+html aside {
+    display: flex;
+    margin: 1em 0 2em;
+}
+
+html aside address {
+    font-style: normal;
+    white-space: pre-line;
+}
+
+html aside address#from {
+    color: #a9a;
+    flex: 1;
+}
+
+html aside address#to {
+    color: #a9a;
+    text-align: left;
+    width: 100%;
+    flex: 1;
+}
+
+html aside address#to span.indent_address {
+    text-indent: 15px;
+}
+
+html dl {
+    text-align: right;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+html dl dt, html dl dd {
+    display: inline;
+    margin: 0;
+    color: #a9a;
+}
+
+html dl dt::before {
+    content: '';
+    display: block;
+}
+
+html table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+html table th {
+    border-bottom: .2mm solid #a9a;
+    color: #a9a;
+    font-size: 10pt;
+    font-weight: 400;
+    padding-bottom: .25cm;
+    text-transform: uppercase;
+}
+
+html table td {
+    padding-top: 7mm;
+}
+
+html table td:last-of-type {
+    color: #1ee494;
+    font-weight: bold;
+    text-align: right;
+}
+
+html table th, html table td {
+    text-align: center;
+}
+
+html table th:first-of-type, html table td:first-of-type {
+    text-align: left;
+}
+
+html table th:last-of-type, html table td:last-of-type {
+    text-align: right;
+}
+
+html table#total {
+    color: #a9a;
+    background: #f6f6f6;
+    border-color: #f6f6f6;
+    border-style: solid;
+    border-width: 1cm 1.5cm;
+    bottom: 0;
+    font-size: 14pt;
+    margin: 0 -1cm;
+    position: absolute;
+    width: 20cm;
+}

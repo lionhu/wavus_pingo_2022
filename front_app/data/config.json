@@ -1,0 +1,30 @@
+{
+  "config": {
+    "layout_type": "ltr",
+    "layout_version": "light",
+    "color": "#ff4c3b"
+  },
+  "system": {
+    "tax_rate": 10,
+    "front_server": "https://www.pingo.jp"
+  },
+
+  "bank_account": {
+    "name": "銀行：　楽天銀行　第三営業支店（253）",
+    "type": "種類：　普通口座",
+    "account":"口座番号：　7117209",
+    "accountname": "口座名義人：　ウェバス（カ"
+  },
+  "company_info": {
+    "name": "WAVUS 株式会社",
+    "CEO": "古月 海光",
+    "postcode": "〒104-0061 東京都中央区",
+    "address": "銀座1-12-4N&E BLD.7階",
+    "email": "crs@wavus.jp",
+    "phone":"050-3697-9239 ",
+    "fax": "050-3697-9239 ",
+    "copyright": "2021 WAVUS Inc."
+  }
+}
+
+

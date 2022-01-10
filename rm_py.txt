@@ -1,0 +1,5 @@
+./pingo/chat/migrations/0001_initial.py
+./pingo/books/migrations/0001_initial.py
+./pingo/authentication/migrations/0001_initial.py
+./pingo/notifications/migrations/0001_initial.py
+./pingo/store/migrations/0001_initial.py

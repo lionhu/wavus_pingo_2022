@@ -1,0 +1,5 @@
+postgres/
+/https_portal/sockets/daphne/daphne.sock.lock
+logs/
+elasticsearch/data/
+rabbitmq/

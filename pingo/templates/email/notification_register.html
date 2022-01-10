@@ -1,0 +1,26 @@
+{% load i18n %}
+
+{% block subject %}
+New User Registered
+{% endblock subject %}
+
+{% block text_body %}
+Dear admin, new user registered : {{ site_name }}.
+
+From Pingo
+{{company}}
+{% endblock text_body %}
+
+{% block html_body %}
+<p>
+Dear admin, following new user was just registered :</p>
+<ul>
+    <li>User: {{user.username}}</li>
+    <li>Email: {{user.email}}</li>
+    <li>Parent: {{user.profile.parent.user.username}}</li>
+    <li>Client: {{user.profile.client.name}}</li>
+</ul>
+<p>Pingo</p>
+
+{{company}}
+{% endblock html_body %}

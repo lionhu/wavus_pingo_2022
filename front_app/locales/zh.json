@@ -1,0 +1,75 @@
+{
+  "auth": {
+    "login": "登录",
+    "logout": "退出",
+    "username": "用户名",
+    "email": "邮箱",
+    "password": "密码",
+    "confirm_password": "密码确认",
+    "forget_password": "忘记密码了？",
+    "register": "注册",
+    "different_password": "密码与确认密码一致吗？",
+    "valid_email": "有效邮箱",
+    "invalid_email": "无效邮箱",
+    "email_verify_code": "邮箱确认码",
+    "auth_failure": "认证失败",
+    "require_email": "需要输入邮箱",
+    "require_vaild_email": "必须是有效的邮箱",
+    "require_password": "需要密码"
+  },
+  "menu": {
+    "dashboard": "管理主页",
+    "orderlist": "订单一览",
+    "all": "全部"
+  },
+  "title": "天使にラブソングを",
+  "home": "主页",
+  "wishlist": "收藏清单",
+  "image": "照片",
+  "productname": "产品名称",
+  "price": "价格",
+  "availabilities": "库存情况",
+  "continue_shopping": "继续购物",
+  "empty_wishlist": "空的收藏夹",
+  "quickview": {
+    "title": "产品介绍",
+    "detail": "详情",
+    "add_to_cart":"放到购物车"
+  },
+  "cart_info": {
+    "title": "购物车",
+    "product": "产品",
+    "short_title": "购物车",
+    "empty_cart": "空的购物车。",
+    "quantity": "数量",
+    "total": "总计",
+    "remove": "删除",
+    "checkout": "支付手续",
+    "pay": "支付",
+    "continue_shopping": "继续购物"
+  },
+  "payment_creditcard": {
+    "pay_by_card": "信用卡支付",
+    "sq-card-number": "信用卡号",
+    "sq-cvv": "验证码",
+    "sq-expiration-date": "有效期"
+  },
+  "checkout": {
+    "title": "支付手续",
+    "shippingadress":"收货地址",
+    "name":"姓名",
+    "phone":"电话",
+    "email":"邮箱",
+    "postcode":"邮编",
+    "state":"都道府県",
+    "city":"市",
+    "town":"町",
+    "address_1":"地址 1",
+    "address_2":"地址 2",
+    "reset":"清空"
+
+  },
+  "delete": "删除",
+  "confirm_remove_order": "要删除清单吗？",
+  "edit_address": "修改收货地址"
+}

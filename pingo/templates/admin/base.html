@@ -1,0 +1,11 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block extrastyle %}
+<link rel="stylesheet" type="text/css" href="{% static 'admin/css/pingo.css' %}">
+{% endblock %}
+
+{% block welcome-msg %}
+    <span class="text_green">{% firstof user.get_short_name user.get_username %}としてログイン中</span>
+
+{% endblock %}

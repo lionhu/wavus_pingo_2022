@@ -1,0 +1,81 @@
+{% load static %}
+{% load humanize %}
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>請求書</title>
+    <meta name="description" content="PinGo Invoice">
+</head>
+
+<body>
+<h3>請求書</h3>
+<small>注文番号:{{ order.slug }}</small>
+
+<aside>
+    <address id="from">
+        WAVUS株式会社
+        〒104-0061 東京都中央区
+        銀座1-12-4N&E BLD.7階
+    </address>
+
+    <address id="to">
+        TO: {{ order.json_shippingaddress.name }}
+        EMAIL: {{ order.json_shippingaddress.email }}
+        PHONE: {{ order.json_shippingaddress.phone }}
+        ADDRESS:
+        〒 {{ order.json_shippingaddress.postcode }}　
+        <span class="indent_address">{{ order.json_shippingaddress.state }}{{ order.json_shippingaddress.town }}</span>
+        <span class="indent_address">{{ order.json_shippingaddress.street }}{{ order.json_shippingaddress.address_1 }}</span>
+        <span class="indent_address">{{ order.json_shippingaddress.address_2 }}</span>
+    </address>
+</aside>
+
+<dl id="informations">
+    <dt>WAVUS Inc.</dt>
+    <dd></dd>
+    <dt>Date</dt>
+    <dd>{{order.ordered_at}}</dd>
+</dl>
+<!--    <img src="file:////usr/src/app/staticfiles/images/pingo.png" />-->
+<table>
+    <thead>
+    <th>商品</th>
+    <th>単価</th>
+    <th>数量</th>
+    <th>小計</th>
+    </thead>
+    <tbody>
+
+    {% for orderitem in order.orderitems.all %}
+    <tr>
+        <td>
+            {{ orderitem.variation.item.item_name }} <br>
+            ({{ orderitem.variation.name }})
+        </td>
+        <td>¥{{ orderitem.final_price |intcomma:False}}</td>
+        <td>{{ orderitem.quantity }}</td>
+        <td>¥{{ orderitem.total_price |intcomma:False }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<table id="total">
+    <thead>
+    <th>受注日</th>
+    <th>受注数</th>
+    <th>合計（税込）</th>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{order.ordered_at}}</td>
+        <td>
+            {{order.Qty}} 点
+        </td>
+        <td>¥{{ order.Total|intcomma:False }}</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

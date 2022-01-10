@@ -1,0 +1,38 @@
+{
+  "data": [
+    {
+      "title": "PinGo",
+      "type": "sub",
+      "active": false,
+      "children": [
+        {
+          "path": "/account/cart",
+          "title": "カート",
+          "type": "link",
+          "icon": "ti-shopping-cart"
+        },
+        {
+          "path": "/page/contact",
+          "title": "お問合せ",
+          "type": "link",
+          "icon": "ti-headphone-alt"
+        },
+        {
+          "path": "/page/faq",
+          "title": "FAQ",
+          "type": "link",
+          "icon": "ti-help-alt"
+        }
+      ]
+    }
+  ],
+  "dashboard": [
+    {"title": "dashboard_menu.account_info","path": "/account","active": false},
+    {"title": "dashboard_menu.orders","path": "/account/orders","active": false},
+    {"title": "dashboard_menu.pingo_orders","path": "/account/pingo_orders","active": true},
+    {"title": "dashboard_menu.points","path": "/account/points","active": false},
+    {"title": "dashboard_menu.viewproducts","path": "/account/viewproducts","active": false}
+
+  ],
+  "default_subcategory": 0
+}

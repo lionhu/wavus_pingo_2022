@@ -1,0 +1,446 @@
+{% block subject %}
+[SUPERADMIN]PinGo-新規注文通知
+{% endblock subject %}
+
+{% block text_body %}
+{{content}}
+注文番号：{{order_id}}
+ユーザー名：{{username}}
+
+注文内容は以下の通りです。<br>
+数量：{{quantity}} <br>
+合計：{{total}} <br>
+
+
+From Pingo
+{% endblock text_body %}
+
+{% block html_body %}
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
+   xmlns:o="urn:schemas-microsoft-com:office:office" data-reactroot="">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="x-apple-disable-message-reformatting">
+      <meta name="format-detection" content="telephone=no,address=no,email=no,date=no,url=no">
+      <meta name="color-scheme" content="light dark">
+      <meta name="supported-color-schemes" content="light dark">
+      <style type="text/css">
+         :root {
+         color-scheme: light dark;
+         supported-color-schemes: light dark;
+         }
+      </style>
+      <title>{{subject}}</title>
+      <!--[if gte mso 9]>
+      <xml>
+         <o:OfficeDocumentSettings>
+            <o:AllowPNG/>
+            <o:PixelsPerInch>96</o:PixelsPerInch>
+         </o:OfficeDocumentSettings>
+      </xml>
+      <![endif]-->
+      <style type="text/css">
+         @font-face {
+         font-family: 'Inter';
+         src: url("https://fonts.gstatic.com/s/inter/v1/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hjp-Ek-_EeA.woff") format('woff');
+         font-weight: 400;
+         font-style: normal;
+         font-display: swap;
+         }
+         @font-face {
+         font-family: 'Inter';
+         src: url("https://fonts.gstatic.com/s/inter/v1/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuI6fAZ9hjp-Ek-_EeA.woff") format('woff');
+         font-weight: 500;
+         font-style: normal;
+         font-display: swap;
+         }
+         @font-face {
+         font-family: 'Inter';
+         src: url("https://fonts.gstatic.com/s/inter/v1/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGKYAZ9hjp-Ek-_EeA.woff") format('woff');
+         font-weight: 600;
+         font-style: normal;
+         font-display: swap;
+         }
+         @font-face {
+         font-family: 'Inter';
+         src: url("https://fonts.gstatic.com/s/inter/v1/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuFuYAZ9hjp-Ek-_EeA.woff") format('woff');
+         font-weight: 700;
+         font-style: normal;
+         font-display: swap;
+         }
+         @font-face {
+         font-family: 'Inter';
+         src: url("https://fonts.gstatic.com/s/inter/v3/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuDyYAZ9hjp-Ek-_EeA.woff") format('woff');
+         font-weight: 800;
+         font-style: normal;
+         font-display: swap;
+         }
+         @font-face {
+         font-family: 'Inter';
+         src: url("https://fonts.gstatic.com/s/inter/v3/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuBWYAZ9hjp-Ek-_EeA.woff") format('woff');
+         font-weight: 900;
+         font-style: normal;
+         font-display: swap;
+         }
+         html,
+         body {
+         margin: 0 auto !important;
+         height: 100% !important;
+         width: 100% !important;
+         font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+         text-rendering: optimizeLegibility;
+         -webkit-font-smoothing: antialiased;
+         }
+         body {
+         mso-line-height-rule: exactly;
+         }
+         * {
+         -ms-text-size-adjust: 100%;
+         -webkit-text-size-adjust: 100%;
+         }
+         div[style*="margin: 16px 0"] {
+         margin: 0 !important;
+         }
+         table,
+         td {
+         mso-table-lspace: 0pt !important;
+         mso-table-rspace: 0pt !important;
+         }
+         table {
+         border-spacing: 0 !important;
+         border-collapse: collapse !important;
+         table-layout: fixed !important;
+         margin: 0 auto !important;
+         }
+         img {
+         -ms-interpolation-mode: bicubic;
+         }
+         h1,
+         h2,
+         h3,
+         div,
+         p,
+         img,
+         a,
+         li {
+         font-family: 'Inter', 'HelveticaNeue', Helvetica, Arial, sans-serif !important;
+         }
+         a[href^=tel] {
+         color: #AAA;
+         text-decoration: none;
+         }
+         .full {
+         max-width: 960px
+         }
+         .preheader {
+         display: none;
+         font-size: 1px;
+         line-height: 1px;
+         max-height: 0px;
+         max-width: 0px;
+         opacity: 0;
+         overflow: hidden;
+         mso-hide: all;
+         font-family: sans-serif;
+         }
+         img a + a {
+         margin-left: 10px !important;
+         }
+         a + a {
+         margin-left: 10px !important;
+         }
+         p a + a {
+         margin-left: 0 !important;
+         }
+         .button {
+         margin-top: 5px !important;
+         margin-bottom: 5px !important;
+         }
+         .mobile-banner {
+         display: none;
+         }
+         .mobile-spacer {
+         height: 60px;
+         }
+         .show-mobile {
+         display: none;
+         }
+         .block {
+         display: block;
+         }
+         .logo-dark {
+         display: block;
+         }
+         .logo-white {
+         display: none;
+         }
+         .dark .logo-text,
+         .dark .bg-image-text {
+         color: #FFFFFF !important;
+         }
+         .dark .logo-dark {
+         display: none;
+         }
+         .dark .logo-white {
+         display: block !important;
+         }
+         @media (prefers-color-scheme: dark) {
+         body {
+         background: #111111 !important;
+         }
+         h1,
+         h2,
+         h3,
+         div,
+         p,
+         img,
+         li,
+         .logo-text {
+         color: #FFFFFF !important;
+         }
+         .container {
+         background: #111111 !important;
+         }
+         div.key {
+         color: #000000 !important;
+         }
+         .logo-dark {
+         display: none !important;;
+         }
+         .logo-white {
+         display: block !important;;
+         }
+         .bg-box {
+         background: #121212 !important;
+         }
+         .line {
+         color: #444444 !important;
+         }
+         }
+         @media only screen and (min-device-width: 320px) and (max-device-width: 374px) {
+         .container {
+         min-width: 320px !important;
+         }
+         }
+         @media only screen and (min-device-width: 375px) and (max-device-width: 413px) {
+         .container {
+         min-width: 375px !important;
+         }
+         .line {
+         padding: 40px 0 !important;
+         }
+         }
+         @media only screen and (min-device-width: 414px) {
+         .container {
+         min-width: 414px !important;
+         }
+         }
+         @media screen and (max-width: 600px) {
+         .container {
+         width: 100% !important;
+         margin: auto !important;
+         }
+         .stacked {
+         display: block !important;
+         width: 100% !important;
+         max-width: 100% !important;
+         }
+         .stack {
+         display: block !important;
+         float: none !important;
+         }
+         .upsell,
+         .hero {
+         margin: 0 auto 20px auto !important;
+         width: 92% !important;
+         }
+         .mobile-banner {
+         display: block;
+         }
+         .mobile-spacer {
+         height: 40px;
+         }
+         .hide-mobile {
+         display: none;
+         }
+         .show-mobile {
+         display: block;
+         }
+         .bg-box {
+         padding: 40px !important;
+         }
+         h1 {
+         font-size: 38px !important;
+         line-height: 1.15em !important;
+         }
+         .button {
+         margin: 5px 0 !important;
+         width: 100% !important;
+         }
+         }
+      </style>
+      <!-- OUTLOOK START -->
+      <!--[if mso]>
+      <style>
+         h1, h2, h3, h4, div, p, img, a, li {
+         font-family: Arial, sans-serif !important;
+         }
+         h2 {
+         margin-top: 40px !important;
+         }
+      </style>
+      <![endif]-->
+      <!-- OUTLOOK END -->
+   </head>
+   <body class="" style="width:100%;margin:0;padding:30px 0px;text-size-adjust:100%">
+      <div>
+         <!--[if mso | IE]>
+         <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+            <tr>
+               <td>
+                  <![endif]-->
+                  <table width="600" align="center" class="container" cellpadding="0" cellspacing="0" border="0" borderradius="0"
+                     valign="top" role="presentation">
+                     <tbody>
+                        <tr>
+                           <td align="left" valign="top" style="padding:10px 40px">
+                              <table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0" borderradius="0"
+                                 align="left" valign="top" role="presentation">
+                                 <tbody>
+                                    <tr>
+                                       <td align="left" valign="middle" style="width:32px;padding-bottom:10px">
+                                          <a href="https://www.pingo.jp" target="_blank"
+                                             style="font-family:'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;color:#0099FF;text-decoration:underline">
+                                          <img class="logo" width="136" height="136"
+                                             src="https://www.pingo.jp/images/logo/pingo_whitegrey.svg">
+                                          </a>
+                                       </td>
+                                    </tr>
+                                 </tbody>
+                              </table>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td align="left" valign="top" style="padding:10px 40px">
+                              <h1 style="font-family:'Inter', 'HelveticaNeue', Helvetica, Arial, sans-serif;font-weight:800;letter-spacing:-.03em;margin:0;width:100%;font-size:48px;line-height:1.15em;color:#000">
+                                 {{type}} Notification
+                              </h1>
+                           </td>
+                        </tr>
+                        <!--[if mso]>
+                        <table>
+                           <tr>
+                              <td height="10">
+                                 <![endif]-->
+                           <tr>
+                              <td align="left" valign="top" style="padding:0px">
+                                 <!--[if mso]>
+                                 <table>
+                                    <tr>
+                                       <td height="10">
+                                          <![endif]-->
+                                          <div style="height:10px"></div>
+                                          <!--[if mso]>
+                                       </td>
+                                    </tr>
+                                 </table>
+                                 <![endif]-->
+                              </td>
+                           </tr>
+                           <!--[if mso]></td></tr>
+                        </table>
+                        <![endif]-->
+                        <tr>
+                           <td align="left" valign="top" style="padding:10px 40px">
+                              <p style="font-family:'Inter', 'HelveticaNeue', Helvetica, Arial, sans-serif;font-weight:400;font-size:18px;line-height:1.6em;letter-spacing:-0.1px;text-rendering:optimizeLegibility;margin:0;text-align:left;color:#000">
+                                 {{content}}<br><br>
+                              </p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td align="left" valign="top" style="padding:10px 40px">
+                              <p style="font-family:'Inter', 'HelveticaNeue', Helvetica, Arial, sans-serif;font-weight:400;font-size:18px;line-height:1.6em;letter-spacing:-0.1px;text-rendering:optimizeLegibility;margin:0;text-align:left;color:#000">
+                                 注文番号：{{order_id}}<br>
+                                 ユーザー名：{{username}}<br>
+                              </p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td align="left" valign="top" style="padding:10px 40px">
+                              <p style="font-family:'Inter', 'HelveticaNeue', Helvetica, Arial, sans-serif;font-weight:400;font-size:18px;line-height:1.6em;letter-spacing:-0.1px;text-rendering:optimizeLegibility;margin:0;text-align:left;color:#000">
+                                 注文内容は以下の通りです。<br>
+                                 数量：{{quantity}} <br>
+                                 合計：{{total}} <br>
+                                 <br>
+                              </p>
+                           </td>
+                        </tr>
+                        <!--[if mso]>
+                        <table>
+                           <tr>
+                              <td height="10">
+                                 <![endif]-->
+                           <tr>
+                              <td align="left" valign="top" style="padding:0px">
+                                 <!--[if mso]>
+                                 <table>
+                                    <tr>
+                                       <td height="10">
+                                          <![endif]-->
+                                          <div style="height:10px"></div>
+                                          <!--[if mso]>
+                                       </td>
+                                    </tr>
+                                 </table>
+                                 <![endif]-->
+                              </td>
+                           </tr>
+                           <!--[if mso]></td>
+                           </tr>
+                        </table>
+                        <![endif]-->
+                        <tr>
+                           <td align="left" valign="top" style="padding:10px 40px">
+                              {% if button_blue_text is not None %}
+                              <!--[if mso]>
+                              <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word"
+                                 href="https://www.pingo.jp" style="height:46px;v-text-anchor:middle;width:220;" arcsize="50%" strokecolor="#0099FF" fillcolor="#0099FF">
+                                 <w:anchorlock/>
+                                 <center>
+                                    <![endif]-->
+                                    <a href="{{button_blue_url}}" target="_blank" class="button"
+                                       style="font-family:'Inter', 'HelveticaNeue', Helvetica, Arial, sans-serif;border-radius:40px;display:inline-block;font-size:18px;font-weight:600;text-decoration:none;vertical-align:middle;line-height:50px;text-size-adjust:none;text-align:center;width:220px;border:1px solid #0099FF;background-color:#0099FF;color:#FFFFFF">{{button_blue_text}}</a>
+                                    <!--[if mso]>
+                                 </center>
+                              </v:roundrect>
+                              <![endif]-->
+                              {% endif %}
+                              {% if button_grey_text is not None %}
+                              <!--[if mso]>
+                              <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word"
+                                 href="https://www.pingo.jp" style="height:46px;v-text-anchor:middle;width:220;" arcsize="50%" strokecolor="#E2E5E9" fillcolor="#E2E5E9">
+                                 <w:anchorlock/>
+                                 <center>
+                                    <![endif]-->
+                                    <a href="{{button_grey_url}}" target="_blank" class="button"
+                                       style="font-family:'Inter', 'HelveticaNeue', Helvetica, Arial, sans-serif;border-radius:40px;display:inline-block;font-size:18px;font-weight:600;text-decoration:none;vertical-align:middle;line-height:50px;text-size-adjust:none;text-align:center;width:220px;border:1px solid #E2E5E9;background-color:#E2E5E9;color:#000000">{{button_grey_text}}</a>
+                                    <!--[if mso]>
+                                 </center>
+                              </v:roundrect>
+                              <![endif]-->
+                              {% endif %}
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+                  <!--[if mso | IE]>
+               </td>
+            </tr>
+         </table>
+         <![endif]-->
+      </div>
+   </body>
+</html>
+{% endblock html_body %}
