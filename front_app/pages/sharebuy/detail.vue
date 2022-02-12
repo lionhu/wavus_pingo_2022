@@ -84,13 +84,13 @@
                 </div>
               </div>
             </div>
-            <div class="border-product text-left">
+            <div class="border-product">
               <h6 class="product-title">{{ $t('product.about') }}</h6>
               <p v-html='DetailedProduct.description'></p>
             </div>
-            <div class="border-product" v-if="LoggedIn">
+            <div class="border-product" v-if="isLoggedIn">
               <div class="product-icon">
-                <div class="inline-block" v-if="canViewShareProductInfo">
+                <div class="inline-block">
                   <a href="javascript:void(0)" title="Share" class="wishlist-btn text-dark"
                      @click="ShowShareQR" v-b-modal.modal-share-lg
                      variant="primary">
@@ -140,7 +140,7 @@
             </b-tab>
             <b-tab title="コメント">
               <b-card-text>
-                <h4 class="mb-3 text-right" v-if="LoggedIn">
+                <h4 class="mb-3 text-right" v-if="isLoggedIn">
                   <a href="javascript:void(0);" @click="add_comment" class="btn btn-solid d-block mb-3">コメントを書く！</a>
                 </h4>
                 <section class="section-b-space blog-detail-page review-page">
@@ -174,7 +174,7 @@
                                       </div>
                                     </a>
                                   </li>
-                                  <li class="text-danger" v-if="LoggedIn && ME.pk===comment.user.pk">
+                                  <li class="text-danger" v-if="isLoggedIn && ME.pk===comment.user.pk">
                                     <a href="javascript:void(0);" @click="delete_comment(comment.id)">
                                       <div class="unlike">
                                         <i class="fa fa-trash" aria-hidden="true"></i>削除
@@ -253,8 +253,7 @@ export default {
     ...mapGetters({
       policies: 'authfack/policies',
       cart: 'cart/cartItems',
-      LoggedIn: "authfack/loggedIn",
-      canViewShareProductInfo: "authfack/canViewShareProductInfo",
+      isLoggedIn: "authfack/loggedIn",
       ME: "authfack/ME",
       DetailedProduct: "products/getCurrentDetailedProduct",
       DetailedProductID: "products/getCurrentDetailedProductID",
@@ -339,7 +338,7 @@ export default {
         })
     },
     change_comment_thumbs(comment, thumb_type) {
-      if (!this.LoggedIn) {
+      if (!this.isLoggedIn) {
         swalService.showToast("error", "会員に加入する必要があります。");
         return false;
       }

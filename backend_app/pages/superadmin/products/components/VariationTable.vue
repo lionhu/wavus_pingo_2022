@@ -25,7 +25,7 @@ export default {
         inventory: 0,
         sort_by: 0,
         point_rule: {
-          is_valid: true,
+          is_valid: false,
           type: "amount",
           policies: {
             client_superadmin: 0,

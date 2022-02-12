@@ -1,11 +1,10 @@
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from store.serializers import ItemElasticSearchSerializer, PointBankElasticSearchSerializer, \
-    FavoriteElasticSearchSerializer, ViewProductHistoryElasticSearchSerializer, CommentElasticSearchSerializer, \
-    VariationElasticSearchSerializer
+    FavoriteElasticSearchSerializer, ViewProductHistoryElasticSearchSerializer, CommentElasticSearchSerializer
 from core.elasticsearch import ElasticSearchViewSet
 from store.documents import ProductDocument, PointBankDocument, FavoriteDocument, ViewProductHistoryDocument, \
-    ProductCommentDocument, VariationDocument
+    ProductCommentDocument
 from store.models import Favorite
 import numpy as np
 from elasticsearch_dsl import Q as Q_elasticsearch
@@ -23,7 +22,6 @@ __all__ = [
     "FilterFavoritesViewSet",
     "FilterPointBanksViewSet",
     "FilterProductsViewSet",
-    "FilterVariationsViewSet",
 ]
 
 
@@ -189,51 +187,3 @@ class FilterProductsViewSet(ElasticSearchViewSet):
             'match', id=query)
 
         return super(FilterProductsViewSet, self).search(request, *args, **kwargs)
-
-
-class FilterVariationsViewSet(ElasticSearchViewSet):
-    serializer_class = VariationElasticSearchSerializer
-    document_class = VariationDocument
-    generate_q_expression = None
-
-    @action(methods=["get"], detail=True)
-    def ofProduct(self, request, pk=None, *args, **kwargs):
-        item_id = int(pk)
-        if item_id > 0:
-            self.generate_q_expression = Q_elasticsearch(
-                'bool',
-                must=[
-                    Q_elasticsearch('match', item__id=item_id),
-                ])
-            return super(FilterVariationsViewSet, self).search(request, *args, **kwargs)
-        else:
-            return self.valid(request, *args, **kwargs)
-
-    @action(methods=["get"], detail=False)
-    def ofCategory(self, request, *args, **kwargs):
-        query = self.request.query_params.get("query", None)
-        self.generate_q_expression = Q_elasticsearch(
-            'bool',
-            must=[
-                Q_elasticsearch('match', item__category_indexing=query),
-            ])
-        return super(FilterVariationsViewSet, self).search(request, *args, **kwargs)
-
-    @action(methods=["get"], detail=False)
-    def by_name_description(self, request, *args, **kwargs):
-        query = self.request.query_params.get("query", None)
-        self.generate_q_expression = Q_elasticsearch(
-            'multi_match', query=query,
-            fields=[
-                'item_name',
-                'description',
-            ], fuzziness='auto')
-
-        return super(FilterVariationsViewSet, self).search(request, *args, **kwargs)
-
-    @action(methods=["get"], detail=True)
-    def by_id(self, request, pk=None, *args, **kwargs):
-        self.generate_q_expression = Q_elasticsearch(
-            'match', id=pk)
-
-        return super(FilterVariationsViewSet, self).search(request, pk, *args, **kwargs)

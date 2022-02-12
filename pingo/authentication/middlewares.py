@@ -56,8 +56,13 @@ class LastUserActivityMiddleware(MiddlewareMixin):
         if request.user.is_authenticated:
             try:
                 print("IP WEB location")
+                print(request.ipinfo.ip)
+                print(request.ipinfo.country)
+                print(request.ipinfo.country_name)
+                print(request.ipinfo.loc)
                 session_last_activity = request.session.get("last-activity")
                 last_activity = json.loads(session_last_activity)
+                print(last_activity)
                 # If key is old enough, update database.
                 too_old_time = timezone.now() - td(seconds=pingo_settings.LAST_ACTIVITY_INTERVAL_SECS)
                 if not last_activity or last_activity < too_old_time:
@@ -68,14 +73,11 @@ class LastUserActivityMiddleware(MiddlewareMixin):
                         "loc": request.ipinfo.loc,
                     }
 
-                    user = User.objects.filter(pk=request.user.pk).update(
+                    User.objects.filter(pk=request.user.pk).update(
                         last_login=timezone.now(),
                         login_count=F('login_count') + 1,
                         last_location=last_location)
 
-                    LoggedInUser.objects.update_or_create(user=user, defaults={
-                        "web": True
-                    })
                 request.session["last-activity"] = json.dumps(timezone.now())
                 print("update authenticated user last_login")
             except Exception as err:
@@ -103,6 +105,7 @@ class PingoJWTAuthentication(JWTAuthentication):
             print("IP JWT location")
             last_login_in_redis_key = str(pingo_settings.USER_LAST_LOGIN).format(user.id)
             redis_key = cache.get(last_login_in_redis_key, None)
+            print(redis_key)
             if redis_key is None:
                 last_location = {
                     "ip": request.ipinfo.ip,
@@ -118,6 +121,7 @@ class PingoJWTAuthentication(JWTAuthentication):
                 LoggedInUser.objects.update_or_create(user=user, defaults={
                     "web": True
                 })
+                print("Pingo update user last_login_in")
                 cache.set(last_login_in_redis_key, user.last_login, pingo_settings.LAST_ACTIVITY_INTERVAL_SECS)
 
         except Exception as err:

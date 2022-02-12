@@ -5,7 +5,6 @@ from mptt.models import MPTTModel, TreeForeignKey
 from django.db.models import Min, Sum
 from django.utils.timezone import make_aware
 import uuid
-import json
 import os
 from datetime import datetime, timedelta
 from imagekit.models import ImageSpecField
@@ -451,9 +450,6 @@ class Baseitem(BaseImageModel):
     def thumbimage_url(self):
         return "{}{}".format(pingo_settings.NICHIEI_INFO["WEBSITE"], self.thumbimage.url)
 
-    @property
-    def point_rule_indexing(self):
-        return json.dumps(self.point_rule)
 
 class Variation(Baseitem):
     PRODUCT_TYPE = (
@@ -470,7 +466,6 @@ class Variation(Baseitem):
 
     def __str__(self):
         return "{}-{}".format(self.type, self.name)
-
 
 
 class Favorite(models.Model):

@@ -4,7 +4,7 @@ import {mapState, mapGetters} from "vuex";
 
 export default {
   name: "edit_product_variation_table",
-  props: ["variations"],
+  props: ["variations", "product_id"],
   components: {
     Switches: () => import('vue-switches'),
     "el-upload": () => import("element-ui/lib/upload"),
@@ -42,6 +42,9 @@ export default {
   },
   computed: {
     ...mapGetters({
+      back_server: "system/getterBackServer",
+      vendorlist: "system/getterVendorList",
+      categories: "categories/getterCategoryList",
     }),
     csrftoken() {
       return this.$store.state.auth.user.token;

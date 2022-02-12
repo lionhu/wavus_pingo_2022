@@ -1,6 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from store.models import Item, PointBank, Favorite, ViewProductHistory, Comment, Category, Variation
-import json
+from store.models import Item, PointBank, Favorite, ViewProductHistory, Comment, Category
 import logging
 from django.contrib.auth import get_user_model
 
@@ -17,7 +16,6 @@ __all__ = [
     "FavoriteElasticSearchSerializer",
     "ViewProductHistoryElasticSearchSerializer",
     "CommentElasticSearchSerializer",
-    "VariationElasticSearchSerializer",
 ]
 
 
@@ -159,33 +157,3 @@ class CommentElasticSearchSerializer(DynamicSearchSerializer):
             'checked',
             'created_at',
         )
-
-
-class VariationElasticSearchSerializer(DynamicSearchSerializer):
-    item = ItemSimpleElasticSearchSerializer(many=False)
-
-    class Meta:
-        model = Variation
-        fields = (
-            'id',
-            'item',
-            'is_valid',
-            'name',
-            'description',
-            'price',
-            'purchase_price',
-            'extra_cost',
-            'inventory',
-            'sku',
-            'sort_by',
-            'point_rule_indexing',
-            'updated_at',
-            "thumbimage_url",
-        )
-
-    def to_representation(self, instance):
-        result = super(VariationElasticSearchSerializer, self).to_representation(instance)
-        if "point_rule_indexing" in result:
-            result["point_rule"] = json.loads(result["point_rule_indexing"])
-            result.pop("point_rule_indexing")
-        return result

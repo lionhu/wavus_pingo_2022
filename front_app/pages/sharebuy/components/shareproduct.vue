@@ -88,6 +88,7 @@ export default {
       isClientSuperAdmin: "authfack/isClientSuperAdmin",
       isSuperAdmin: "authfack/isSuperadmin",
       productDataID: "products/getCurrentDetailedProductID",
+      // productData: "products/getCurrentDetailedProduct",
     }),
   },
   watch: {

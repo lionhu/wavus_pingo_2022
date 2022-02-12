@@ -26,10 +26,10 @@ export default {
   //      this.$store.dispatch("products/load_category_products", `?filter{id}==${params.id}`)
   //     .then(response => {
   //       console.log(response)
-  //       self.productlist = response.items;
-  //       self.total_rows = response.meta.total_results;
-  //       if (self.total_rows) {
-  //         swalService.showToast("success", `${self.total_rows} products loaded!`)
+  //       vm.productlist = response.items;
+  //       vm.total_rows = response.meta.total_results;
+  //       if (vm.total_rows) {
+  //         swalService.showToast("success", `${vm.total_rows} products loaded!`)
   //       } else {
   //         swalService.showToast("warning", `no products found!`)
   //       }
@@ -82,8 +82,7 @@ export default {
       disabled: false,
       imageUrl: "",
       submitted: false,
-      product: {},
-      isLoading:false
+      product: {}
     };
   },
   mounted() {
@@ -114,43 +113,40 @@ export default {
   },
   methods: {
     load_product(product_id) {
-      let self = this;
+      let vm = this;
       this.$store.dispatch("products/load_product", product_id)
         .then(response => {
           console.log("load_product editor mount", response)
-          self.product = response.item;
-          self.product.supplier = response.item.supplier.id;
+          vm.product = response.item;
+          vm.product.supplier = response.item.supplier.id;
         })
     },
     handleCategoryChange(val) {
       let index = val.length - 1;
       this.product.category = val[index]
     },
-    async update_product() {
+    update_product() {
       let product_id = this.product.id;
-      let category_id = this.product.category.id;
       this.product.supplier = this.supplier_id;
       delete this.product.id;
       delete this.product.image;
       delete this.product.item_sliderimages;
       delete this.product.item_variations;
       delete this.product.created_at;
-      delete this.product.category;
-      this.product.category=category_id;
 
-      let self = this;
+      let vm = this;
 
-      self.isLoading=true;
+      vm.$nuxt.$loading.start();
       console.log("edit product for", this.product)
-      await this.$store.dispatch("products/update_product", {
+      this.$store.dispatch("products/update_product", {
         product_id: product_id,
         info: this.product
       }).then(item => {
-        self.load_product(product_id)
+        vm.load_product(product_id)
         swalService.showModal("Success", "Product was updated!", "success")
       })
 
-      self.isLoading=false;
+      vm.$nuxt.$loading.finish();
     },
     operateVariationTable(result,) {
       switch (result.command) {
@@ -175,30 +171,30 @@ export default {
     },
     ReplaceVariation(_variation) {
       console.log(" ReplaceVariation(_variation)", _variation)
-      let self = this;
-      if (self.product.item_variations.length === 0) {
-        self.product.item_variations.push(_variation)
+      let vm = this;
+      if (vm.product.item_variations.length === 0) {
+        vm.product.item_variations.push(_variation)
       } else {
-        var index = self.product.item_variations.findIndex(variation => variation.id === _variation.id)
+        var index = vm.product.item_variations.findIndex(variation => variation.id === _variation.id)
         if (index > -1) {
-          self.product.item_variations.splice(index, 1, _variation);
+          vm.product.item_variations.splice(index, 1, _variation);
           swalService.showModal("Success", "Variation has been successfully updated!", "success")
         }
       }
     },
     deleteVariation(variation_id) {
       let url = `store/public/variations/${variation_id}/`
-      var self = this;
+      var vm = this;
       APIServices.destroy(url)
         .then(APIServices.handleResponse)
         .then((response) => {
           if (response.result) {
-            var index = self.product.item_variations.findIndex(variation => variation.id === variation_id)
+            var index = vm.product.item_variations.findIndex(variation => variation.id === variation_id)
             if (index > -1) {
-              self.product.item_variations.splice(index, 1);
+              vm.product.item_variations.splice(index, 1);
             }
             swalService.showModal("Success", "Variation has been deleted successfully updated!", "success")
-            self.$bvModal.hide("modal_variation")
+            vm.$bvModal.hide("modal_variation")
           }
         })
     },
@@ -372,12 +368,8 @@ export default {
               </div>
               <div class="form-group mt-3 float-right">
 
-<!--                <b-button class="btn-rounded" variant="danger" @click="update_product">更新</b-button>-->
+                <b-button class="btn-rounded" variant="danger" @click="update_product">更新</b-button>
 
-                <b-button variant="danger" v-bind:disabled="isLoading" class="btn-rounded ml-1"
-                          @click="update_product">
-                  <b-spinner small v-if="isLoading"></b-spinner>&nbsp;&nbsp;更新
-                </b-button>
               </div>
             </div>
           </div>

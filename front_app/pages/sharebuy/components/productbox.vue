@@ -15,7 +15,7 @@
         <a href="javascript:void(0)" @click="showQuickview(product)" v-b-modal.modal-lg variant="primary">
           <i class="ti-shopping-cart theme-bgcolor"></i>
         </a>
-        <a href="javascript:void(0)" v-if="LoggedIn">
+        <a href="javascript:void(0)" v-if="isLoggedIn">
           <i class="ti-heart  theme-bgcolor" aria-hidden="true"
              @click="addToWishlist(product)"></i>
         </a>
@@ -24,8 +24,9 @@
           @click="ShowShareQR(product)"
           v-b-modal.modal-share-lg
           variant="primary"
-          v-if="LoggedIn && canViewShareProductInfo"
-        ><i class="ti-share theme-bgcolor" aria-hidden="true"></i>
+          v-if="isLoggedIn"
+        >
+          <i class="ti-share theme-bgcolor" aria-hidden="true"></i>
         </a>
       </div>
     </div>
@@ -57,8 +58,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      LoggedIn: "authfack/loggedIn",
-      canViewShareProductInfo: "authfack/canViewShareProductInfo",
+      isLoggedIn: "authfack/loggedIn",
     })
   },
   methods: {

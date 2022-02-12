@@ -7,7 +7,7 @@ from rest_framework_simplejwt.views import TokenViewBase
 from rolepermissions.checkers import has_role, has_permission
 from rolepermissions.roles import clear_roles, assign_role, remove_role, get_user_roles
 from authentication.serializers import TokenObtainLifetimeSerializer, TokenRefreshLifetimeSerializer, ClientSerializer, \
-    ProfileSerializer, PingoUserSerializer, UserSerializer
+    ProfileSerializer,PingoUserSerializer, UserSerializer
 from django.contrib.auth import get_user_model
 from validate_email import validate_email as VALIDATE_EMAIL
 from pingo.conf import settings as pingo_settings
@@ -17,7 +17,7 @@ from core.mixins import PingoImageMixin
 from core.elasticsearch import PaginatedElasticSearchAPIView
 from authentication.permissions import ProfilePermission, UserPermission
 from authentication.exceptions import OneClientExecption, SystemAssetExecption, NoAccessExecption
-from authentication.models import Client, Profile, LoggedInUser
+from authentication.models import Client, Profile
 from authentication.documents import UserDocument
 from authentication.mixins import ProfileTreeMixin
 from django.db.models import Q
@@ -44,7 +44,6 @@ class TokenObtainPairView(TokenViewBase):
         print(request.data)
         entry_role = request.data.get("entry_role", None)
         email = request.data.get("email", None)
-        user = None
         if "entry_role" in request.data and entry_role and email:
             print(f"check user role for: {request.data.get('entry_role', None)}")
             user = User.objects.filter(email=email).first()
@@ -52,9 +51,7 @@ class TokenObtainPairView(TokenViewBase):
                 return Response({
                     "error_code": "unmatched_role"
                 }, status=status.HTTP_401_UNAUTHORIZED)
-        response = super(TokenObtainPairView, self).post(request, *args, **kwargs)
-
-        return response
+        return super(TokenObtainPairView, self).post(request, *args, **kwargs)
 
 
 class TokenRefreshView(TokenViewBase):
@@ -386,7 +383,7 @@ class ProfileViewSet(ProfileTreeMixin, ModelViewSet):
         try:
             # users = User.objects.filter(profile__client_id=pk)
             # serializer = PingoUserSerializer(instance=users, many=True)
-            profiles = Profile.objects.filter(client_id=pk)
+            profiles=Profile.objects.filter(client_id=pk)
             serializer = self.get_serializer(profiles, many=True)
             return Response({
                 "children": serializer.data

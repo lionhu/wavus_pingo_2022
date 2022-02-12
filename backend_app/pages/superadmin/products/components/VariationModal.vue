@@ -81,6 +81,19 @@ export default {
       <div class="row mt-md-2">
         <div class="col-md-6">
           <div class="form-group">
+            <label for="field-is_valid" class="control-label">有効化にする
+              <span class="text-danger">*</span>
+            </label> <br>
+
+            <switches v-model="edit_variation.point_rule.is_valid" id="field-is_valid" type-bold="false"
+                      color="warning"
+                      class="ml-1 my-auto"></switches>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-md-2">
+        <div class="col-md-6">
+          <div class="form-group">
             <label for="product-sku" class="control-label">SKU
               <span class="text-danger">*</span>
             </label>
@@ -131,6 +144,24 @@ export default {
       </div>
 
       <div class="row">
+<!--        <div class="col-md-3">-->
+<!--          <div class="form-group">-->
+<!--            <label for="field-inventory" class="control-label">在庫-->
+<!--              <span class="text-danger">*</span>-->
+<!--            </label>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="col-md-3">-->
+<!--          <div class="form-group">-->
+<!--            <input type="number" id="field-inventory" v-model="edit_variation.inventory" class="form-control"-->
+<!--                   :class="{ 'is-invalid': submitted && $v.edit_variation.price.$error }"-->
+<!--                   :placeholder="edit_variation.inventory"/>-->
+
+<!--            <div v-if="submitted && !$v.edit_variation.inventory.required" class="invalid-feedback">This value is-->
+<!--              required.-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
         <div class="col-md-6">
           <div class="form-group">
             <label for="field-price" class="control-label">粗利
@@ -188,19 +219,6 @@ export default {
         </div>
       </div>
       <h4>紹介ポイント</h4>
-      <div class="row mt-md-2">
-        <div class="col-md-6">
-          <div class="form-group">
-            <label for="field-is_valid" class="control-label">有効化にする
-              <span class="text-danger">*</span>
-            </label> <br>
-
-            <switches v-model="edit_variation.point_rule.is_valid" id="field-is_valid" type-bold="false"
-                      color="warning"
-                      class="ml-1 my-auto"></switches>
-          </div>
-        </div>
-      </div>
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">

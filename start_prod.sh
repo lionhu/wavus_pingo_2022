@@ -5,4 +5,4 @@ xargs rm -r <tar_ignore
 rm tar_ignore
 
 
-docker-compose --env-file ./.env_prod  up -d
+docker-compose --env-file ./.env.docker  up -d

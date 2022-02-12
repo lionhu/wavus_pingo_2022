@@ -1,7 +1,7 @@
 from django_elasticsearch_dsl import Document, fields
 from django_elasticsearch_dsl.registries import registry
 from django.contrib.auth import get_user_model
-from store.models import Item, PointBank, Favorite, ViewProductHistory, Comment, Category, Variation
+from store.models import Item, PointBank, Favorite, ViewProductHistory, Comment, Category
 
 User = get_user_model()
 
@@ -11,7 +11,6 @@ __all__ = [
     "FavoriteDocument",
     "ProductCommentDocument",
     "ViewProductHistoryDocument",
-    "VariationDocument",
 ]
 
 
@@ -39,45 +38,6 @@ class ItemInnerDoc(Document):
         "supplier_indexing": fields.TextField(),
         "sort_by": fields.IntegerField(),
     })
-
-
-@registry.register_document
-class VariationDocument(ItemInnerDoc):
-    thumbimage_url = fields.TextField(attr='thumbimage_url')
-    point_rule_indexing = fields.TextField(attr="point_rule_indexing")
-
-    class Index:
-        name = 'variations'
-        settings = {
-            'number_of_shards': 1,
-            'number_of_replicas': 0,
-        }
-
-    class Django:
-        model = Variation
-        related_models = [Item]
-        fields = [
-            'id',
-            'is_valid',
-            'name',
-            'description',
-            'price',
-            'purchase_price',
-            'extra_cost',
-            'inventory',
-            'sku',
-            'sort_by',
-            'updated_at',
-        ]
-
-    def get_queryset(self):
-        return super(VariationDocument, self).get_queryset().select_related(
-            'item'
-        )
-
-    def get_instances_from_related(self, related_instance):
-        if isinstance(related_instance, Item):
-            return related_instance.item_variations.all()
 
 
 @registry.register_document

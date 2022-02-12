@@ -6,7 +6,7 @@ from store.viewsets import CategoryViewSet, SectionViewSet, FaqViewSet, Logistic
     FavoriteViewSet, OrderItemViewSet, InventoryViewSet, OrderViewSet, PointBankViewSet, \
     MarginViewSet, SystemViewSet, PingoProductViewSet, PingoOrderViewSet, PingoItemSliderImageViewSet, \
     FilterProductsViewSet, FilterPointBanksViewSet, FilterFavoritesViewSet, \
-    FilterViewProductHistoriesViewSet, FilterCommentsViewSet,FilterVariationsViewSet
+    FilterViewProductHistoriesViewSet, FilterCommentsViewSet
 
 app_name = 'store'
 
@@ -38,7 +38,6 @@ router.register("filter_pointbanks", FilterPointBanksViewSet, basename="filter_p
 router.register("filter_favorites", FilterFavoritesViewSet, basename="filter_favorites")
 router.register("filter_viewproducts", FilterViewProductHistoriesViewSet, basename="filter_viewproducts")
 router.register("filter_comments", FilterCommentsViewSet, basename="filter_comments")
-router.register("filter_variations", FilterVariationsViewSet, basename="filter_variations")
 
 from .views import HelloPDFView
 

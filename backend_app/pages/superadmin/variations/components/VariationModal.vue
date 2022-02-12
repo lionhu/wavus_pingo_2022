@@ -27,7 +27,6 @@ export default {
   methods: {
     updateProductVariationInformation() {
       var vm = this;
-      let item_id = this.edit_variation.item.id;
       this.edit_variation.price = parseInt(this.edit_variation.price);
       this.edit_variation.purchase_price = parseInt(this.edit_variation.purchase_price);
       this.edit_variation.extra_cost = parseInt(this.edit_variation.extra_cost);
@@ -39,16 +38,10 @@ export default {
       this.edit_variation.point_rule.policies.user_self = parseInt(this.edit_variation.point_rule.policies.user_self);
 
       delete this.edit_variation.image;
-      delete this.edit_variation.item;
-      this.edit_variation.item=item_id;
-
-
-
       console.log({variation_id: this.edit_variation.id, info: this.edit_variation})
       this.$store.dispatch("products/update_variation",
         {variation_id: this.edit_variation.id, info: this.edit_variation})
         .then((response) => {
-          console.log("products/update_variation",response)
           vm.$emit("operateresult", {"modeAdd": false, "_variation": response, variation_id: this.edit_variation.id})
         })
     },
@@ -68,6 +61,19 @@ export default {
            v-if="showVariationModal"
   >
     <form @submit.prevent="updateProductVariationInformation">
+      <div class="row mt-md-2">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="field-is_valid" class="control-label">有効化にする
+              <span class="text-danger">*</span>
+            </label> <br>
+
+            <switches v-model="edit_variation.point_rule.is_valid" id="field-is_valid" type-bold="false"
+                      color="warning"
+                      class="ml-1 my-auto"></switches>
+          </div>
+        </div>
+      </div>
       <div class="row mt-md-2">
         <div class="col-md-6">
           <div class="form-group">
@@ -121,6 +127,24 @@ export default {
       </div>
 
       <div class="row">
+<!--        <div class="col-md-3">-->
+<!--          <div class="form-group">-->
+<!--            <label for="field-inventory" class="control-label">在庫-->
+<!--              <span class="text-danger">*</span>-->
+<!--            </label>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="col-md-3">-->
+<!--          <div class="form-group">-->
+<!--            <input type="number" id="field-inventory" v-model="edit_variation.inventory" class="form-control"-->
+<!--                   :class="{ 'is-invalid': submitted && $v.edit_variation.price.$error }"-->
+<!--                   :placeholder="edit_variation.inventory"/>-->
+
+<!--            <div v-if="submitted && !$v.edit_variation.inventory.required" class="invalid-feedback">This value is-->
+<!--              required.-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
         <div class="col-md-6">
           <div class="form-group">
             <label for="field-price" class="control-label">粗利
@@ -178,20 +202,6 @@ export default {
         </div>
       </div>
       <h4>紹介ポイント</h4>
-      <div class="row mt-md-2">
-        <div class="col-md-6">
-          <div class="form-group">
-            <label for="field-is_valid" class="control-label">有効化にする
-              <span class="text-danger">*</span>
-            </label> <br>
-
-            <switches v-model="edit_variation.point_rule.is_valid" id="field-is_valid" type-bold="false"
-                      color="warning"
-                      class="ml-1 my-auto"></switches>
-          </div>
-        </div>
-      </div>
-
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">

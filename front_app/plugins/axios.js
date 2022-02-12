@@ -14,7 +14,7 @@ export default function ({$axios, store, redirect, $auth, app}, inject) {
   })
   $axios.onResponse(response => {
 
-    console.log('[ RESPONSE ]' + response.request.responseURL, response)
+    // console.log('[ RESPONSE ]' + response.request.responseURL, response)
     return response
   });
 

@@ -52,9 +52,6 @@ const getters = {
     }
     return null
   },
-  canViewShareProductInfo(state, getters){
-    return (getters.isMember || getters.isClientAdmin || getters.isClientSuperAdmin);
-  },
   isStaff(state, getters) {
     if (getters.ME === undefined) return false;
     return getters.ME.roles.includes("staff")
