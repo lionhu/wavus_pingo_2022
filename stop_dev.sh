@@ -5,4 +5,4 @@
 #rm tar_ignore
 
 
-docker-compose --env-file ./.env.docker -f docker-compose.dev.yml down
+docker-compose -f docker-compose.dev.yml down

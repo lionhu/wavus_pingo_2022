@@ -8,6 +8,7 @@ import products from './modules/products'
 import system from './modules/system'
 import orders from './modules/orders'
 import addressbook from './modules/addressbook'
+import blog from './modules/blog'
 import points from './modules/points'
 import pingoproducts from './modules/pingoproducts'
 Vue.use(Vuex)
@@ -23,6 +24,7 @@ const createStore = () => {
       orders,
       addressbook,
       system,
+      blog,
       points
     }
   })
