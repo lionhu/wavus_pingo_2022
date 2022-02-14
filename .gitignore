@@ -6,3 +6,5 @@
 ssl_certs/
 system/https_portal/logs/
 system/redis/redis_data/
+.env
+.env_prod
