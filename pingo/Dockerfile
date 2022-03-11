@@ -37,8 +37,9 @@ RUN pip install --upgrade pip
 RUN pip3 install --no-cache-dir \
     numpy \
     pandas \
-    psycopg2
-#    scipy
+    psycopg2 \
+    autopep8 pylint pylint-django
+    #    scipy
 #    gensim==3.8.1 # remove it if not necessary
 
 # Installing requirements.pip from project

@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from store.models import Item, Variation , PointBank, Favorite, ViewProductHistory, Comment, Category
+from store.models import Item, Variation, PointBank, Favorite, ViewProductHistory, Comment, Category
 import logging
 from django.contrib.auth import get_user_model
 
@@ -137,7 +137,8 @@ class FavoriteElasticSearchSerializer(DynamicSearchSerializer):
         )
 
     def to_representation(self, instance):
-        result = super(FavoriteElasticSearchSerializer, self).to_representation(instance)
+        result = super(FavoriteElasticSearchSerializer,
+                       self).to_representation(instance)
         if "item" in result:
             result["item"].pop("labels")
             result["item"].pop("description")
@@ -185,7 +186,7 @@ class VariationElasticSearchSerializer(DynamicSearchSerializer):
     item = ItemSimpleElasticSearchSerializer(many=False)
 
     class Meta:
-        model = Variation 
+        model = Variation
         fields = (
             'id',
             'item',

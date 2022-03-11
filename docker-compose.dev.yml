@@ -32,21 +32,20 @@ services:
   pingo_daphne:
     container_name: pingo_daphne
     hostname: pingo_daphne
-#    image: "lionhu/wavus_pingo:v_${VERSION}"
-    build:
-      context: ./pingo
+    image: lionhu/wavus_pingo:v_1000
+    # build:
+    #   context: ./pingo
     volumes:
       - ./system/logs/gunicorn/:/usr/src/logs/
       - ./pingo/:/usr/src/app/
       - ./system/supervisord/supervisord_django.conf:/etc/supervisord.conf #add
       - ./pingo/entrypoint.sh:/usr/src/app/entrypoint.sh #add
-      - ./system/socket/daphne/:/usr/src/app/system/run/
-#      - ./system/pingo_fonts/:/usr/share/fonts/
+      - ./system/socket/daphne/:/usr/src/app/system/run//
     ports:
      - 8000:8000
      - 8001:8001
     restart: always
-    env_file: #引入外部变量控制容器的运行
+    env_file: 
       - ./pingo/.env.dev
     depends_on:
       - postgres
@@ -63,22 +62,22 @@ services:
       - 5432:5432
     volumes:
       - ./system/postgres/:/var/lib/postgresql/data/
-    env_file: #引入外部变量控制容器的运行
+    env_file: 
       - ./system/.env.postgres
 
   celery:
     container_name: celery
     hostname: celery
     restart: always
-#    image: "lionhu/wavus_pingo_celery:v_${VERSION}"
-    build:
-      context: ./pingo
+    image: lionhu/wavus_celery:v_1000
+    # build:
+    #   context: ./pingo
     volumes:
       - ./system/logs/celery/:/usr/src/logs/
       - ./pingo/:/usr/src/app/
       - ./system/supervisord/supervisord_celery.conf:/etc/supervisord_celery.conf #add
       - ./pingo/entrypoint_celery.sh:/usr/src/app/entrypoint.sh #add
-    env_file: #引入外部变量控制容器的运行
+    env_file: 
       - ./pingo/.env.dev
     ports:
       - 5555:5555
@@ -94,7 +93,7 @@ services:
     restart: always
     tty: true
     image: redis:alpine
-    env_file: #引入外部变量控制容器的运行
+    env_file: 
       - ./system/.env.redis
     expose:
       - 6379
@@ -103,23 +102,24 @@ services:
       - ./system/redis/conf/6379.conf:/usr/local/etc/redis/redis.conf
     command: redis-server --appendonly yes
 
-  redis-commander:
-    container_name: redis_commander
-    image: rediscommander/redis-commander:latest
-    environment:
-      - REDIS_HOSTS=local:redis:6379
-      - HTTP_USER=root
-      - HTTP_PASSWORD=Hisshghu3500
-    ports:
-      - 8081:8081
-    depends_on:
-      - redis
-    links:
-      - redis
+  # redis-commander:
+  #   container_name: redis_commander
+  #   image: rediscommander/redis-commander:latest
+  #   environment:
+  #     - REDIS_HOSTS=local:redis:6379
+  #     - HTTP_USER=root
+  #     - HTTP_PASSWORD=Hisshghu3500
+  #   ports:
+  #     - 8081:8081
+  #   depends_on:
+  #     - redis
+  #   links:
+  #     - redis
 
   rabbitmq:
     container_name: rabbitmq
-    image: rabbitmq:3.7.3-management
+    image: lionhu/wavus_rabbitmq:v_1
+    # image: rabbitmq:3.7.3-management
     hostname: rabbitmq
     environment:
       RABBITMQ_DEFAULT_USER: celery
@@ -129,8 +129,7 @@ services:
      - 5672:5672
      - 15672:15672
     volumes:
-     - rabbitmq:/var/lib/rabbitmq/mnesia
-#     - ./system/rabbitmq/:/var/lib/rabbitmq/
+     - rabbitmq:/var/lib/rabbitmq/mnesia/
     expose:
       - 5672
       - 15672
@@ -150,8 +149,9 @@ services:
 
   elasticsearch:
     container_name: elasticsearch
-    build:
-      context: ./system/elasticsearch
+    image: lionhu/wavus_elasticsearch:v_1
+    # build:
+    #   context: ./system/elasticsearch
     environment:
       - node.name=elasticsearch
       - discovery.type=single-node
@@ -163,27 +163,27 @@ services:
       - 9200:9200
     restart: always
 #
-  kibana:
-    container_name: kibana
-    build:
-        context: ./system/kibana
-    volumes:
-      - ./system/kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml
-    ports:
-      - 5601:5601
-    restart: always
-    depends_on:
-      - elasticsearch
+  # kibana:
+  #   container_name: kibana
+  #   build:
+  #       context: ./system/kibana
+  #   volumes:
+  #     - ./system/kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml
+  #   ports:
+  #     - 5601:5601
+  #   restart: always
+  #   depends_on:
+  #     - elasticsearch
 
-  notebook:
-    image: jupyter/datascience-notebook
-    ports:
-      - "8888:8888"
-    environment:
-      - JUPYTER_ENABLE_LAB=yes
-    volumes:
-      - jupiter:/home/jovyan/work
-    command: start-notebook.sh --NotebookApp.token=''
+  # notebook:
+  #   image: jupyter/datascience-notebook
+  #   ports:
+  #     - "8888:8888"
+  #   environment:
+  #     - JUPYTER_ENABLE_LAB=yes
+  #   volumes:
+  #     - jupiter:/home/jovyan/work
+  #   command: start-notebook.sh --NotebookApp.token=''
 
 
 #  pingo_front:

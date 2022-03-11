@@ -7,7 +7,8 @@ from store.serializers import ItemElasticSearchSerializer, PointBankElasticSearc
 from core.elasticsearch import ElasticSearchViewSet
 from store.documents import ProductDocument, PointBankDocument, FavoriteDocument, ViewProductHistoryDocument, \
     ProductCommentDocument, VariationDocument
-from store.models import Favorite, Variation
+from store.models import Favorite
+
 import numpy as np
 from elasticsearch_dsl import Q as Q_elasticsearch
 from core.charts import objects_to_df, Chart, filter_objects
