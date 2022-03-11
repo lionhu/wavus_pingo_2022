@@ -18,7 +18,7 @@
                 </div>
                 <div class="brand-logo">
                   <nuxt-link :to="{ path: '/'}" >
-                    <img :src='logoimage' class="img-fluid animate__animated animate__slideInDown" />
+                    <img :src='logo_image' class="img-fluid animate__animated animate__slideInDown" />
                   </nuxt-link>
                 </div>
               </div>
@@ -40,7 +40,7 @@ export default {
   data() {
     return {
       leftSidebarVal: false,
-      logoimage:"/images/logo/pingo_dark.svg"
+      logo_image:"/images/logo/pingo_dark.svg"
     }
   },
   head() {
@@ -74,9 +74,9 @@ export default {
   watch :{
     layout(newVal,oldVal){
       if (newVal==="dark"){
-        this.logoimage="/images/logo/pingo_light.svg"
+        this.logo_image="/images/logo/pingo_white.svg"
       }else {
-        this.logoimage="/images/logo/pingo_dark.svg"
+        this.logo_image="/images/logo/pingo_dark.svg"
 
       }
     }
