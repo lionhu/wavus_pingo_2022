@@ -12,7 +12,7 @@
           <b-button pill variant="outline-success">
             {{ variant.price | currency("¥") }}
           </b-button>
-          <div class="text-center">
+          <div class="text-left">
             <!--                  <span class="d-block theme-color">{{ variant.price|currency("¥") }}</span>-->
             <img :src="variant.image_url" style="width: 80px;">
           </div>

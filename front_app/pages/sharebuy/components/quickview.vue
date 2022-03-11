@@ -12,7 +12,7 @@
 
       <div class="row quickview-modal" v-if="!loading">
         <div class="col-lg-6 col-xs-12">
-          <div class="quick-view-img text-center">
+          <div class="quick-view-img text-left">
             <a href="javascript:void(0);" @click="view_product_detail"
                :to="{ path: '/shop/'+productData.id, params:{id:productData.id,product: productData, product_type:'REGULAR'}}">
               <img
@@ -37,7 +37,7 @@
             <div class="product-buttons" v-if="productData.item_variations">
               <div v-for="variant in productData.item_variations" :key="variant.id" class="row line-height-3 mt-3">
                 <div class="col-12 d-flex justify-content-between" v-if="variant.variation_type==='REGULAR'">
-                  <div class="text-center">
+                  <div class="text-left">
                     <img :src="variant.image_url" style="width: 80px;"> <br>
                     <span class="my-auto">{{ variant.sku }}</span> <br>
                     <span class="my-auto">{{ variant.name }}</span>

@@ -23,7 +23,7 @@
                 >
                   <div class="no-slider row">
                     <div class="product-box" v-for="(product,index) in products" :key="index">
-                      <sigle_ProductBox
+                      <single_ProductBox
                         :product="product"
                         :index="index"
                         @ShowShareQR="ShowShareQR"
@@ -58,7 +58,7 @@ import {APIServices} from "~/helpers/APIs";
 
 export default {
   components: {
-    sigle_ProductBox: () => import('./productbox'),
+    single_ProductBox: () => import('./productbox'),
     quickviewModel: () => import('./quickview'),
     shareproductModel: () => import('./shareproduct'),
   },
