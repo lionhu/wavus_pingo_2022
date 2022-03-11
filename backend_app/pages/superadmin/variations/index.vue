@@ -23,7 +23,8 @@ export default {
       ],
       showVariationModal: false,
       modeAdd: false,
-      search_key: '',
+      search_keyword: '',
+      search_sku: '',
       variations: [],
       variations_meta: {
         links: {},
@@ -84,9 +85,28 @@ export default {
       this.variations_meta.page = page
       this.load_list()
     },
-    search_variations () {
+    search_variations (byMode) {
       if (this.search_key !== '') {
+        const self = this
+        let searchUrl = ''
+        if (byMode === 'sku') {
+          searchUrl = `/store/public/filter_variations/by_sku/?query=${this.search_sku}`
+        } else {
+          searchUrl = `store/public/filter_variations/by_name_description/?query=${this.search_keyword}`
+        }
 
+        this.$nuxt.$loading.start()
+        APIServices.get(searchUrl)
+          .then(APIServices.handleResponse)
+          .then((response) => {
+            console.log(response)
+            self.variations = response
+            self.variations_meta.page_size = response.length
+            self.variations_meta.page = 1
+            self.variations_meta.total = response.length
+          })
+
+        this.$nuxt.$loading.finish()
       }
     },
     load_list () {
@@ -210,19 +230,43 @@ export default {
               <div class="col-sm-12">
                 <div class="input-group">
                   <input
+                    v-model="search_sku"
                     type="text"
                     class="form-control"
-                    v-model="search_key"
-                    placeholder="product name"
+                    placeholder="sku"
+                    aria-describedby="basic-addon2"
+                  >
+                  <div class="input-group-append">
+                    <button
+                      class="btn btn-success waves-effect waves-light"
+                      type="button"
+                      @click="search_variations('sku')"
+                    >
+                      Search SKU
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group row mb-0">
+              <div class="col-sm-12">
+                <div class="input-group">
+                  <input
+                    v-model="search_keyword"
+                    type="text"
+                    class="form-control"
+                    placeholder="keyword"
                     aria-describedby="basic-addon2"
                   >
                   <div class="input-group-append">
                     <button
                       class="btn btn-dark waves-effect waves-light"
                       type="button"
-                      @click="SearchProducts"
+                      @click="search_variations('keywords')"
                     >
-                      Search
+                      Search Keywords
                     </button>
                   </div>
                 </div>
@@ -270,8 +314,8 @@ export default {
                     :before-upload="beforeAvatarUpload"
                   >
                     <img
-                      v-if="scope.row.image_url"
-                      :src="scope.row.image_url"
+                      v-if="scope.row.thumbimage_url"
+                      :src="scope.row.thumbimage_url"
                       style="max-width:160px;"
                       class="avatar"
                     >
@@ -310,31 +354,6 @@ export default {
                   <span class="d-block text-right">{{ scope.row.price|currency("¥") }}(販売)</span>
                   <span class="d-block text-right text-danger">{{ scope.row.purchase_price|currency("- ¥") }}(仕入)</span>
                   <span class="d-block text-right text-danger">{{ scope.row.extra_cost|currency("- ¥") }}(付加)</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                label="ポイントポリシー"
-                sortable
-                prop="is_valid"
-              >
-                <template slot-scope="scope">
-                  <div v-if="scope.row.point_rule.is_valid">
-                    <span class="d-inline-block text-right  mr-3">{{
-                      $t("menuitems.organizations.user.client_superadmin")
-                    }}:</span>{{ scope.row.point_rule.policies.client_superadmin|currency("¥") }} <br>
-                    <span class="d-inline-block  text-right  mr-3">{{
-                      $t("menuitems.organizations.user.client_admin")
-                    }}:</span>{{ scope.row.point_rule.policies.client_admin|currency("¥") }} <br>
-                    <span class="d-inline-block  text-right mr-3">{{
-                      $t("menuitems.organizations.user.level_2")
-                    }}:</span>{{ scope.row.point_rule.policies.level_2|currency("¥") }} <br>
-                    <span class="d-inline-block  text-right mr-3">{{
-                      $t("menuitems.organizations.user.level_1")
-                    }}:</span>{{ scope.row.point_rule.policies.level_1|currency("¥") }} <br>
-                    <span class="d-inline-block text-right mr-3">{{
-                      $t("menuitems.organizations.user.user_self")
-                    }}:</span>{{ scope.row.point_rule.policies.user_self|currency("¥") }}
-                  </div>
                 </template>
               </el-table-column>
               <el-table-column

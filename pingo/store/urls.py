@@ -6,7 +6,7 @@ from store.viewsets import CategoryViewSet, SectionViewSet, FaqViewSet, Logistic
     FavoriteViewSet, OrderItemViewSet, InventoryViewSet, OrderViewSet, PointBankViewSet, \
     MarginViewSet, SystemViewSet, PingoProductViewSet, PingoOrderViewSet, PingoItemSliderImageViewSet, \
     FilterProductsViewSet, FilterPointBanksViewSet, FilterFavoritesViewSet, \
-    FilterViewProductHistoriesViewSet, FilterCommentsViewSet
+    FilterViewProductHistoriesViewSet, FilterCommentsViewSet, FilterVariationViewSet
 
 app_name = 'store'
 
@@ -34,6 +34,7 @@ router.register('pointbanks', PointBankViewSet, basename="pointbanks")
 router.register('margins', MarginViewSet, basename="margins")
 router.register('system', SystemViewSet, basename="system")
 router.register("filter_products", FilterProductsViewSet, basename="filter_products")
+router.register("filter_variations", FilterVariationViewSet,basename="filter_variations")
 router.register("filter_pointbanks", FilterPointBanksViewSet, basename="filter_pointbanks")
 router.register("filter_favorites", FilterFavoritesViewSet, basename="filter_favorites")
 router.register("filter_viewproducts", FilterViewProductHistoriesViewSet, basename="filter_viewproducts")

@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from store.models import Item, PointBank, Favorite, ViewProductHistory, Comment, Category
+from store.models import Item, Variation , PointBank, Favorite, ViewProductHistory, Comment, Category
 import logging
 from django.contrib.auth import get_user_model
 
@@ -11,6 +11,7 @@ __all__ = [
     "UserElasticSearchSerializer",
     "CategoryElasticSearchSerializer",
     "ItemElasticSearchSerializer",
+    "VariationElasticSearchSerializer",
     "ItemSimpleElasticSearchSerializer",
     "PointBankElasticSearchSerializer",
     "FavoriteElasticSearchSerializer",
@@ -69,6 +70,27 @@ class ItemElasticSearchSerializer(ModelSerializer):
             "supplier_indexing",
             "sort_by",
         )
+
+
+# class VariationElasticSearchSerializer(ModelSerializer):
+#     category = CategoryElasticSearchSerializer(many=False)
+
+#     class Meta:
+#         model = Item
+#         fields = (
+#             'id',
+#             'item_name',
+#             'description',
+#             'package',
+#             'is_valid',
+#             "thumbimage_url",
+#             "category",
+#             "labels",
+#             "variation_min_price",
+#             "variation_stock_total",
+#             "supplier_indexing",
+#             "sort_by",
+#         )
 
 
 class ItemSimpleElasticSearchSerializer(ModelSerializer):
@@ -156,4 +178,26 @@ class CommentElasticSearchSerializer(DynamicSearchSerializer):
             'approved',
             'checked',
             'created_at',
+        )
+
+
+class VariationElasticSearchSerializer(DynamicSearchSerializer):
+    item = ItemSimpleElasticSearchSerializer(many=False)
+
+    class Meta:
+        model = Variation 
+        fields = (
+            'id',
+            'item',
+            'name',
+            'description',
+            'thumbimage_url',
+            'purchase_price',
+            'extra_cost',
+            'price',
+            'is_valid',
+            'sort_by',
+            'inventory',
+            'sku',
+            'point_rule',
         )

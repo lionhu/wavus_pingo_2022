@@ -1,11 +1,13 @@
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework import status
 from store.serializers import ItemElasticSearchSerializer, PointBankElasticSearchSerializer, \
-    FavoriteElasticSearchSerializer, ViewProductHistoryElasticSearchSerializer, CommentElasticSearchSerializer
+    FavoriteElasticSearchSerializer, ViewProductHistoryElasticSearchSerializer, \
+    CommentElasticSearchSerializer, VariationElasticSearchSerializer
 from core.elasticsearch import ElasticSearchViewSet
 from store.documents import ProductDocument, PointBankDocument, FavoriteDocument, ViewProductHistoryDocument, \
-    ProductCommentDocument
-from store.models import Favorite
+    ProductCommentDocument, VariationDocument
+from store.models import Favorite, Variation
 import numpy as np
 from elasticsearch_dsl import Q as Q_elasticsearch
 from core.charts import objects_to_df, Chart, filter_objects
@@ -18,6 +20,7 @@ PALETTE = ['#465b65', '#184c9c', '#d33035', '#ffc107', '#28a745', '#6f7f8c', '#6
 
 __all__ = [
     "FilterCommentsViewSet",
+    "FilterVariationViewSet",
     "FilterViewProductHistoriesViewSet",
     "FilterFavoritesViewSet",
     "FilterPointBanksViewSet",
@@ -54,6 +57,36 @@ class FilterCommentsViewSet(ElasticSearchViewSet):
         query = self.request.query_params.get("query", None)
         self.generate_q_expression = Q_elasticsearch('match', item__id=query)
         return super(FilterCommentsViewSet, self).search(request, *args, **kwargs)
+
+
+class FilterVariationViewSet(ElasticSearchViewSet):
+    serializer_class = VariationElasticSearchSerializer
+    document_class = VariationDocument
+    generate_q_expression = None
+
+    @action(methods=["get"], detail=False)
+    def by_name_description(self, request, *args, **kwargs):
+        query = self.request.query_params.get("query", None)
+        self.generate_q_expression = Q_elasticsearch(
+            'multi_match', query=query,
+            fields=[
+                'sku',
+                'item_name',
+                'description',
+            ], fuzziness='auto')
+
+        return super().search(request, *args, **kwargs)
+
+    @action(methods=["get"], detail=False)
+    def by_sku(self, request, *args, **kwargs):
+        query = self.request.query_params.get("query", None)
+        self.generate_q_expression = Q_elasticsearch(
+            'bool', 
+            should=[
+                Q_elasticsearch('wildcard', sku=query+'**')
+            ])
+
+        return super().search(request, *args, **kwargs)
 
 
 class FilterViewProductHistoriesViewSet(ElasticSearchViewSet):
@@ -107,12 +140,14 @@ class FilterFavoritesViewSet(ElasticSearchViewSet):
         # return Response({}, 200)
         top_n = request.data.get("query", 10)
         mychart = Chart(palette=PALETTE)
-        margins_qs = filter_objects(Favorite, fields=["item"], foreign_info=["item_name", "item__item_name"])
+        margins_qs = filter_objects(Favorite, fields=["item"], foreign_info=[
+                                    "item_name", "item__item_name"])
 
         print(margins_qs)
         margin_summary = {"labels": [], "datasets": []}
         if margins_qs.count():
-            df_margins = objects_to_df(margins_qs, fields=["item", "item_name"])
+            df_margins = objects_to_df(
+                margins_qs, fields=["item", "item_name"])
             df_margins["counts"] = 1
             mychart.from_df_topranking(df_margins, values=['counts'], labels=['item_name'],
                                        aggfunc=np.sum, sort_by="counts")
@@ -128,7 +163,8 @@ class FilterPointBanksViewSet(ElasticSearchViewSet):
     @action(methods=["get"], detail=False)
     def me(self, request, *args, **kwargs):
         query = self.request.query_params.get("query", None)
-        self.generate_q_expression = Q_elasticsearch('match', user__username=query)
+        self.generate_q_expression = Q_elasticsearch(
+            'match', user__username=query)
         return super(FilterPointBanksViewSet, self).search(request, *args, **kwargs)
 
 
