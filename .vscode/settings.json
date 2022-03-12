@@ -1,6 +1,6 @@
 {
     "nuxt.isNuxtApp": false,
-    "editor.formatOnSave": true,
+    // "editor.formatOnSave": true,
     "python.formatting.provider":"autopep8",
     "python.linting.enabled": true,
     "python.linting.lintOnSave": true
