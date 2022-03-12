@@ -34,13 +34,14 @@ def update_latest_variation_stock():
                 variation.inventory = stock_sum["total"] if stock_sum["total"] is not None else 0
                 variation.save()
 
-                product_keys = pingo_settings.REDIS_KEYS["PRODUCT"].format(variation.item.id)
+                product_keys = pingo_settings.REDIS_KEYS["PRODUCT"].format(
+                    variation.item.id)
                 cache.delete_pattern(f"*{product_keys}*")
 
 
 @shared_task
 def rebuild_elasticsearch_indexing():
-    logger.error("rebuild_elasticsearch_indexing")
+    print("rebuild_elasticsearch_indexing")
     management.call_command('search_index', '--rebuild', '-f')
 
 

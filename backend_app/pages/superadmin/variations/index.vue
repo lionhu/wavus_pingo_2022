@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 <script>
 import Swal from 'sweetalert2'
 import { APIServices } from '@/helpers/APIs'
@@ -15,6 +14,7 @@ export default {
   },
   data () {
     return {
+      isLoading: false,
       title: '商品在庫',
       items: [
         { text: 'PINGO' },
@@ -61,11 +61,12 @@ export default {
   head () {
     return {
       title: `${this.title} | PINGO`,
-      script: [
-        { src: 'https://unpkg.com/element-ui/lib/index.js' }
-      ],
+      script: [{ src: 'https://unpkg.com/element-ui/lib/index.js' }],
       link: [
-        { rel: 'stylesheet', href: 'https://unpkg.com/element-ui/lib/theme-chalk/index.css' }
+        {
+          rel: 'stylesheet',
+          href: 'https://unpkg.com/element-ui/lib/theme-chalk/index.css'
+        }
       ]
     }
   },
@@ -95,25 +96,26 @@ export default {
           searchUrl = `store/public/filter_variations/by_name_description/?query=${this.search_keyword}`
         }
 
-        this.$nuxt.$loading.start()
+        this.isLoading = true
+
         APIServices.get(searchUrl)
           .then(APIServices.handleResponse)
           .then((response) => {
-            console.log(response)
             self.variations = response
             self.variations_meta.page_size = response.length
             self.variations_meta.page = 1
             self.variations_meta.total = response.length
           })
 
-        this.$nuxt.$loading.finish()
+        this.isLoading = false
       }
     },
     load_list () {
       const self = this
 
       this.$nuxt.$loading.start()
-      APIServices.get(this.list_url).then(APIServices.handleResponse)
+      APIServices.get(this.list_url)
+        .then(APIServices.handleResponse)
         .then((response) => {
           // eslint-disable-next-line no-console
           console.log(response)
@@ -131,7 +133,10 @@ export default {
         type: opt === 'plus' ? 'BS' : 'RS',
         in_out: opt === 'plus' ? 1 : -1,
         quantity: 0,
-        info: opt === 'plus' ? 'buy stock from supplier' : 'return stock to supplier'
+        info:
+          opt === 'plus'
+            ? 'buy stock from supplier'
+            : 'return stock to supplier'
       }
       Swal.fire({
         title: _tilte,
@@ -148,10 +153,9 @@ export default {
             .then(APIServices.handleResponse)
             .then((response) => {
               return response
-            }).catch((error) => {
-              Swal.showValidationMessage(
-                `Request failed: ${error}`
-              )
+            })
+            .catch((error) => {
+              Swal.showValidationMessage(`Request failed: ${error}`)
             })
         },
         allowOutsideClick: () => !Swal.isLoading()
@@ -160,7 +164,9 @@ export default {
           APIServices.get(`store/public/variations/${result.value.variation}/`)
             .then(APIServices.handleResponse)
             .then((response) => {
-              const index = vm.variations.findIndex(variation => variation.id === result.value.variation)
+              const index = vm.variations.findIndex(
+                variation => variation.id === result.value.variation
+              )
 
               // eslint-disable-next-line no-console
               console.log('index', index)
@@ -191,18 +197,24 @@ export default {
       const isLt2M = file.size / 1024 / 1024 < 2
       // return isLt2M;
       if (!isLt2M || !isJPG) {
-        swalService.showModal('Invalid picture', 'Should be JPEG and below 2M', 'warning')
+        swalService.showModal(
+          'Invalid picture',
+          'Should be JPEG and below 2M',
+          'warning'
+        )
         return false
       }
       return isJPG && isLt2M
       // return isJPG && isLt2M;
     },
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     handleVariationImageSuccess (res, file) {
       if (res.result) {
         this.ReplaceVariation(res.data)
       }
     },
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     VariationOperate ({ modeAdd, _variation }) {
       const vm = this
       this.ReplaceVariation(_variation)
@@ -210,7 +222,9 @@ export default {
     },
     ReplaceVariation (_variation) {
       const vm = this
-      const index = vm.variations.findIndex(variation => variation.id === _variation.id)
+      const index = vm.variations.findIndex(
+        variation => variation.id === _variation.id
+      )
       if (index > -1) {
         vm.variations.splice(index, 1, _variation)
         swalService.showModal('Success', '更新されました!', 'success')
@@ -243,6 +257,11 @@ export default {
                       @click="search_variations('sku')"
                     >
                       Search SKU
+                      <font-awesome-icon
+                        v-if="isLoading"
+                        :icon="['fa', 'spinner']"
+                        spin
+                      />
                     </button>
                   </div>
                 </div>
@@ -267,6 +286,11 @@ export default {
                       @click="search_variations('keywords')"
                     >
                       Search Keywords
+                      <font-awesome-icon
+                        v-if="isLoading"
+                        :icon="['fa', 'spinner']"
+                        spin
+                      />
                     </button>
                   </div>
                 </div>
@@ -281,9 +305,11 @@ export default {
       <div class="card-body">
         <div class="row">
           <div class="table-responsive">
-            <div v-if="variations_meta.total>0" class="row my-2">
+            <div v-if="variations_meta.total > 0" class="row my-2">
               <div class="col">
-                <div class="dataTables_paginate paging_simple_numbers float-right">
+                <div
+                  class="dataTables_paginate paging_simple_numbers float-right"
+                >
                   <ul class="pagination pagination-rounded">
                     <b-pagination
                       v-model="variations_meta.page"
@@ -300,15 +326,22 @@ export default {
             <el-table
               :data="variations"
               style="width: 100%"
-              :header-cell-style="{textAlign: 'center'}"
+              :header-cell-style="{ textAlign: 'center' }"
             >
               <el-table-column width="250" sortable prop="id">
                 <template slot-scope="scope">
+                  <font-awesome-icon
+                    :icon="['fa', 'award']"
+                    :class="{
+                      'text-success': scope.row.is_valid,
+                      'text-danger': !scope.row.is_valid,
+                    }"
+                  />
                   <el-upload
                     class="avatar-uploader"
                     :action="getUploadVariationimageURL(scope.row.id)"
                     :show-file-list="false"
-                    :headers="{'Authorization':csrftoken}"
+                    :headers="{ Authorization: csrftoken }"
                     :on-success="handleVariationImageSuccess"
                     :name="'image'"
                     :before-upload="beforeAvatarUpload"
@@ -316,7 +349,7 @@ export default {
                     <img
                       v-if="scope.row.thumbimage_url"
                       :src="scope.row.thumbimage_url"
-                      style="max-width:160px;"
+                      style="max-width: 160px"
                       class="avatar"
                     >
                     <i v-else class="el-icon-plus avatar-uploader-icon" />
@@ -332,16 +365,21 @@ export default {
                   </b-badge>
                 </template>
               </el-table-column>
-              <el-table-column
-                label="在庫"
-                sortable
-                width="100"
-                prop="rate"
-              >
+              <el-table-column label="在庫" sortable width="100" prop="rate">
                 <template slot-scope="scope">
-                  <span class="d-block text-center">{{ scope.row.inventory }}</span>
-                  <a href="javascript:void(0);" class="btn btn-warning d-block" @click="InventoryOpt(scope.row,'plus')">+</a>
-                  <a href="javascript:void(0);" class="btn btn-danger d-block" @click="InventoryOpt(scope.row,'minus')">-</a>
+                  <span class="d-block text-center">{{
+                    scope.row.inventory
+                  }}</span>
+                  <a
+                    href="javascript:void(0);"
+                    class="btn btn-warning d-block"
+                    @click="InventoryOpt(scope.row, 'plus')"
+                  >+</a>
+                  <a
+                    href="javascript:void(0);"
+                    class="btn btn-danger d-block"
+                    @click="InventoryOpt(scope.row, 'minus')"
+                  >-</a>
                 </template>
               </el-table-column>
               <el-table-column
@@ -351,27 +389,30 @@ export default {
                 prop="is_valid"
               >
                 <template slot-scope="scope">
-                  <span class="d-block text-right">{{ scope.row.price|currency("¥") }}(販売)</span>
-                  <span class="d-block text-right text-danger">{{ scope.row.purchase_price|currency("- ¥") }}(仕入)</span>
-                  <span class="d-block text-right text-danger">{{ scope.row.extra_cost|currency("- ¥") }}(付加)</span>
+                  <span class="d-block text-right">{{ scope.row.price | currency("¥") }}(販売)</span>
+                  <span class="d-block text-right text-danger">{{
+                    scope.row.purchase_price | currency("- ¥")
+                  }}(仕入)</span>
+                  <span class="d-block text-right text-danger">{{ scope.row.extra_cost | currency("- ¥") }}(付加)</span>
                 </template>
               </el-table-column>
-              <el-table-column
-                label="Action"
-              >
+              <el-table-column label="Action">
                 <template slot-scope="scope">
                   <a
                     v-b-modal.modal_variation_component
                     href="javascript:void(0);"
                     class="action-icon"
-                    @click="editVariation( scope.row)"
-                  ><i class="fe-edit" /></a>
+                    @click="editVariation(scope.row)"
+                  ><i class="fe-edit" />
+                  </a>
                 </template>
               </el-table-column>
             </el-table>
-            <div v-if="variations_meta.total>0" class="row my-2">
+            <div v-if="variations_meta.total > 0" class="row my-2">
               <div class="col">
-                <div class="dataTables_paginate paging_simple_numbers float-right">
+                <div
+                  class="dataTables_paginate paging_simple_numbers float-right"
+                >
                   <ul class="pagination pagination-rounded">
                     <b-pagination
                       v-model="variations_meta.page"

@@ -1,6 +1,7 @@
-import TerserPlugin from 'terser-webpack-plugin'
-const environment = process.env.NODE_ENV
-const envSettings = require('./env.pingo.js')
+import * as FontAwesome from './plugins/fontawesome'
+import TerserPlugin from 'terser-webpack-plugin';
+const environment = process.env.NODE_ENV;
+const envSettings = require('./env.pingo.js');
 
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
@@ -30,9 +31,7 @@ export default {
     script: [
       // {src: 'https://unpkg.com/element-ui/lib/index.js'},
     ],
-    link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/backend/favicon.ico' }
-    ]
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/backend/favicon.ico' }]
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -55,6 +54,8 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/typescript
     // '@nuxt/typescript-build',
+
+    ['@nuxtjs/fontawesome', { component: 'fontAwesome', suffix: true }]
   ],
 
   modules: [
@@ -62,7 +63,7 @@ export default {
     '@nuxtjs/auth-next',
     'nuxt-i18n',
     'bootstrap-vue/nuxt',
-    'nuxt-fontawesome',
+    // "nuxt-fontawesome",
     '@nuxt/image'
   ],
   auth: {
@@ -72,14 +73,16 @@ export default {
     //   callback: false,   // Oauth認証等で必要となる コールバックルート
     //   home: '/',         // ログイン後のリダイレクトURL
     // },
-    plugins: [
-      '~/plugins/axios.js'
-    ],
+    plugins: ['~/plugins/axios.js'],
     strategies: {
       local: {
         scheme: 'refresh',
         endpoints: {
-          login: { url: 'auth/token/obtain/', method: 'post', propertyName: 'token' },
+          login: {
+            url: 'auth/token/obtain/',
+            method: 'post',
+            propertyName: 'token'
+          },
           refresh: { url: 'auth/token/refresh/', method: 'post' },
           user: { url: 'auth/users/me/', method: 'get', propertyName: false },
           logout: false
@@ -104,21 +107,51 @@ export default {
     }
   },
   fontawesome: {
-    component: 'fa',
-    imports: [{
-      set: '@fortawesome/free-solid-svg-icons',
-      icons: ['faAdjust', 'faHeart', 'faUser']
+    // component: "fa",
+    // imports: [
+    //   {
+    //     set: "@fortawesome/free-solid-svg-icons",
+    //     icons: ["faAdjust", "faHeart", "faUser", "faSpinner"]
+    //   }
+    // ],
+    icons: {
+      solid: FontAwesome.solid,
+      regular: FontAwesome.regular,
+      brands: FontAwesome.brands
     }
-    ]
   },
 
   bootstrapVue: {
-    components: ['BContainer', 'BRow', 'BCol', 'BForm', 'BFormGroup', 'BFormInput', 'BFormRadioGroup', 'BFormRadio',
-      'BFormCheckbox', 'BFormSelect', 'BFormSelectOption', 'BButton', 'BAlert', 'BBadge', 'BTabs', 'BTab', 'BModal', 'BNavItemDropdown',
-      'BDropdown', 'BSpinner', 'BOverlay', 'BDropdownItem', 'BBreadcrumb', 'BDropdownHeader', 'BDropdownDivider', 'BPagination'],
+    components: [
+      'BContainer',
+      'BRow',
+      'BCol',
+      'BForm',
+      'BFormGroup',
+      'BFormInput',
+      'BFormRadioGroup',
+      'BFormRadio',
+      'BFormCheckbox',
+      'BFormSelect',
+      'BFormSelectOption',
+      'BButton',
+      'BAlert',
+      'BBadge',
+      'BTabs',
+      'BTab',
+      'BModal',
+      'BNavItemDropdown',
+      'BDropdown',
+      'BSpinner',
+      'BOverlay',
+      'BDropdownItem',
+      'BBreadcrumb',
+      'BDropdownHeader',
+      'BDropdownDivider',
+      'BPagination'
+    ],
     directives: ['VBModal', 'VBPopover', 'VBTooltip', 'VBScrollspy'],
-    componentPlugins: [
-      'ModalPlugin']
+    componentPlugins: ['ModalPlugin']
   },
   i18n: {
     locales: ['en', 'jp', 'zh'],
@@ -143,10 +176,7 @@ export default {
     babel: {
       compact: true
     },
-    transpile: [
-      'vee-validate/dist/rules',
-      '/node_modules\/(dom7|swiper)\/.*/]'
-    ],
+    transpile: ['vee-validate/dist/rules', '/node_modules/(dom7|swiper)/.*/]'],
     optimization: {
       minimize: true,
       minimizer: [
@@ -168,4 +198,4 @@ export default {
       poll: true
     }
   }
-}
+};
