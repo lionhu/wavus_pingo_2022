@@ -3,7 +3,6 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls import include
-from search_indexes import urls as search_index_urls
 import debug_toolbar
 
 from rest_framework import routers
@@ -28,15 +27,11 @@ urlpatterns = [
         ])),
         path('api/', include([
             path('auth/', include('djoser.urls.jwt')),  # add
-            # path('auth/', include('djoser.urls.authtoken')),  # add
             path('auth/', include('authentication.urls')),  # add
-            path('search/', include(search_index_urls)),  # add
-            path('bookstore/', include('books.urls')),  # add
             path('store/', include('store.urls')),  # add
         ])),
 
     ])),
-    path('chat/', include('chat.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

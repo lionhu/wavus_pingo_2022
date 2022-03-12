@@ -59,7 +59,7 @@ export default {
     hasUnapprovedPoints () {
       return this.unApprovedPoints.data.length
     },
-    hasunApprovedUserPoints () {
+    hasUnapprovedUserPoints () {
       return this.unApprovedUserPoints.data.length
     },
     hasUserRanking () {
@@ -88,7 +88,7 @@ export default {
       </div>
       <div class="col-md-6 col-xs-12">
         <UnapprovedUserPoint
-          v-if="hasunApprovedUserPoints"
+          v-if="hasUnapprovedUserPoints"
           :unapprovedpoints_data="unApprovedUserPoints"
           header_title="未承認ポイント"
           title="ユーザー別(Top3)"

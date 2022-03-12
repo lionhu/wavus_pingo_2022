@@ -7,7 +7,6 @@ django_asgi_app = get_asgi_application()
 
 
 import notifications.routing
-import chat.routing
 from authentication.middlewares import TokenAuthMiddleware
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'hello_daphne.settings')

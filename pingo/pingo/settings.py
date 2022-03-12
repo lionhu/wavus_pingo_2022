@@ -69,13 +69,9 @@ INSTALLED_APPS = [
     "authentication",
     "store",
     "backend_admin",
-    "chat",
     'notifications',
     "core",
     "celery_tasks",
-    "books",
-    "fx",
-    "search_indexes"
 ]
 
 MIDDLEWARE = [
