@@ -43,6 +43,7 @@ def update_latest_variation_stock():
 def rebuild_elasticsearch_indexing():
     print("rebuild_elasticsearch_indexing")
     management.call_command('search_index', '--rebuild', '-f')
+    update_latest_variation_stock.delay()
 
 
 @periodic_task(run_every=(crontab(minute='*/30')))
