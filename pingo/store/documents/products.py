@@ -50,10 +50,13 @@ class ProductDocument(Document):
         'id': fields.IntegerField(),
         'title': fields.TextField(),
     })
+    item_variations = fields.NestedField(properties={
+       "id":fields.IntegerField(),
+       "sku":fields.TextField(),
+       "inventory":fields.IntegerField(),
+       "price":fields.IntegerField()
+    })
     labels = fields.TextField()
-    variation_min_price = fields.IntegerField(attr="variation_min_price")
-    variation_stock_total = fields.IntegerField(attr="variation_stock_total")
-
     class Index:
         name = 'items'
         settings = {
@@ -63,7 +66,7 @@ class ProductDocument(Document):
 
     class Django:
         model = Item
-        related_models = [Category]
+        related_models = [Category, Variation]
         fields = [
             'id',
             'item_name',
@@ -81,6 +84,8 @@ class ProductDocument(Document):
     def get_instances_from_related(self, related_instance):
         if isinstance(related_instance, Category):
             return related_instance.category_items.all()
+        elif isinstance(related_instance,Variation):
+            return related_instance.item
 
 @registry.register_document
 class VariationDocument(ItemInnerDoc):

@@ -36,9 +36,9 @@
          class="d-flex justify-content-around text-white">
         <h6 style="line-height:1.4rem;">{{ product_name(product.item_name) }}</h6>
       </a>
-      <h4 class="mb-2">価格：{{ product.variation_min_price|currency("¥") }}〜</h4>
-      <!-- <h4 v-if="product.variation_stock_total">在庫あり</h4>
-      <h4 class="theme-color" v-else> 売り切れ</h4> -->
+      <h4 class="mb-2">価格：{{ productMinPrice|currency("¥") }} <span v-if="product.item_variations.length">~</span></h4>
+      <h4 v-if="productHasInventory">在庫あり</h4>
+      <h4 class="theme-color" v-else> 売り切れ</h4>
     </div>
   </div>
 
@@ -59,7 +59,17 @@ export default {
   computed: {
     ...mapGetters({
       isLoggedIn: "authfack/loggedIn",
-    })
+    }),
+    productHasInventory(){
+      let total = this.product.item_variations.reduce((prev, current) => {
+       return prev+current.inventory 
+      }, 0);
+      return !!total;
+    },
+    productMinPrice(){
+      const prices = this.product.item_variations.map(x=>x.price)
+      return  Math.min(...prices) 
+    }
   },
   methods: {
     product_name(item_name) {

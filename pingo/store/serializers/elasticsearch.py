@@ -12,6 +12,7 @@ __all__ = [
     "CategoryElasticSearchSerializer",
     "ItemElasticSearchSerializer",
     "VariationElasticSearchSerializer",
+    "VariationSimpleElasticSearchSerializer",
     "ItemSimpleElasticSearchSerializer",
     "PointBankElasticSearchSerializer",
     "FavoriteElasticSearchSerializer",
@@ -51,9 +52,20 @@ class CategoryElasticSearchSerializer(ModelSerializer):
         )
 
 
+class VariationSimpleElasticSearchSerializer(DynamicSearchSerializer):
+
+    class Meta:
+        model = Variation
+        fields = (
+            'id',
+            'inventory',
+            'sku',
+            'price'
+        )
+
 class ItemElasticSearchSerializer(ModelSerializer):
     category = CategoryElasticSearchSerializer(many=False)
-
+    item_variations = VariationSimpleElasticSearchSerializer(many=True)
     class Meta:
         model = Item
         fields = (
@@ -64,9 +76,8 @@ class ItemElasticSearchSerializer(ModelSerializer):
             'is_valid',
             "thumbimage_url",
             "category",
+            "item_variations",
             "labels",
-            "variation_min_price",
-            "variation_stock_total",
             "supplier_indexing",
             "sort_by",
         )
