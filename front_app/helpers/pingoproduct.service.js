@@ -2,8 +2,8 @@ import {APIServices} from "~/helpers/APIs"
 
 export const pingoproductService = {
   getFilterCategory,
-  getProdoctIntroQR,
-  getProdoctDetailByID,
+  getProductIntroQR,
+  getProductDetailByID,
 
 };
 const urls = {
@@ -11,7 +11,7 @@ const urls = {
   "pingo_products": "store/public/pingo_products/",
 }
 
-function getProdoctDetailByID(product_id) {
+function getProductDetailByID(product_id) {
   let url =`store/public/pingo_products/${product_id}/?expand=item_pingo_sliderimages`
   return APIServices.get(url)
     .then(handleResponse)
@@ -20,7 +20,7 @@ function getProdoctDetailByID(product_id) {
     });
 }
 
-function getProdoctIntroQR(product_id) {
+function getProductIntroQR(product_id) {
   let url = `store/public/pingo_products/${product_id}/get_introduce_qr/`;
   return APIServices.get(url)
     .then(handleResponse)

@@ -37,8 +37,8 @@
         <h6 style="line-height:1.4rem;">{{ product_name(product.item_name) }}</h6>
       </a>
       <h4 class="mb-2">価格：{{ product.variation_min_price|currency("¥") }}〜</h4>
-      <h4 v-if="product.variation_stock_total">在庫あり</h4>
-      <h4 class="theme-color" v-else> 売り切れ</h4>
+      <!-- <h4 v-if="product.variation_stock_total">在庫あり</h4>
+      <h4 class="theme-color" v-else> 売り切れ</h4> -->
     </div>
   </div>
 

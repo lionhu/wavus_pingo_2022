@@ -9,7 +9,7 @@ const state = () => ({
 })
 const actions = {
   get_product_IntroQR({commit}, product_id) {
-      return pingoproductService.getProdoctIntroQR(product_id).then(response => {
+      return pingoproductService.getProductIntroQR(product_id).then(response => {
         return response
       })
   },
@@ -29,7 +29,7 @@ const actions = {
     commit("clearCart")
   },
   retrieveProductDetail({commit}, product_id) {
-      return pingoproductService.getProdoctDetailByID(product_id).then(response => {
+      return pingoproductService.getProductDetailByID(product_id).then(response => {
         if (response.id>0) {
           commit("setDetailProduct", response)
           return response

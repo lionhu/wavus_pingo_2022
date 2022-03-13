@@ -119,7 +119,7 @@ export default {
     async load_product() {
       let self = this;
       self.loading = true;
-      await productService.getProdoctByID(this.productDataID)
+      await productService.getProductByID(this.productDataID)
         .then(response => {
           self.productData = response.item
         })

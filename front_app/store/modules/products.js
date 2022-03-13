@@ -16,7 +16,7 @@ const getters = {
   getterCurrentCategory: (state) => {
     return state.currentCategory
   },
-  getterCurrentSubategory: (state) => {
+  getterCurrentSubcategory: (state) => {
     return state.currentSubcategory;
   },
   getterCategoryProducts: (state) => {
@@ -158,14 +158,14 @@ const actions = {
   },
 
   get_product_byID({commit}, product_id) {
-    return productService.getProdoctByID(product_id).then(response => {
+    return productService.getProductByID(product_id).then(response => {
       commit("setCurrentDetailProduct", response.item)
       return response.item
     })
   },
 
   get_product_IntroQR({commit}, product_id) {
-    return productService.getProdoctIntroQR(product_id).then(response => {
+    return productService.getProductIntroQR(product_id).then(response => {
       return response
     })
   },

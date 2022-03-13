@@ -60,7 +60,7 @@ export default {
   computed: {
     ...mapGetters({
       currentCategory: "products/getterCurrentCategory",
-      currentSubcategory: "products/getterCurrentSubategory",
+      currentSubcategory: "products/getterCurrentSubcategory",
     }),
   },
   methods: {

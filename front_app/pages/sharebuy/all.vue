@@ -53,7 +53,7 @@ export default {
       products: "system/getterAllProducts",
       back_server: 'system/getterBackServer',
       currentCategory: "products/getCurrentCategory",
-      currentSubcategory: "products/getCurrentSubategory",
+      currentSubcategory: "products/getCurrentSubcategory",
     }),
   },
 }

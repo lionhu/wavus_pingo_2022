@@ -196,14 +196,14 @@ export default {
       productslistMeta: "products/getterCurrentCategoryProductsMeta",
       isLoggedIn: "authfack/loggedIn",
       currentCategory: "products/getterCurrentCategory",
-      CurrentSubategory: "products/getterCurrentSubategory",
+      CurrentSubcategory: "products/getterCurrentSubcategory",
     }),
     filter_options() {
-      return `store/public/filter_products/${this.CurrentSubategory.id}/ofCategory/`
+      return `store/public/filter_products/${this.CurrentSubcategory.id}/ofCategory/`
     }
   },
   watch: {
-    CurrentSubategory(newVal, oldVal) {
+    CurrentSubcategory(newVal, oldVal) {
       this.load_products()
     }
   },

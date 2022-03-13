@@ -4,9 +4,9 @@ import {swalService} from "~/helpers/swal.service";
 
 export const productService = {
   getCategoryProducts,
-  getProdoctByID,
-  getProdoctDetailByID,
-  getProdoctIntroQR,
+  getProductByID,
+  getProductDetailByID,
+  getProductIntroQR,
   getMyFavorites,
   removeMyFavorites,
   addToMyFavorites,
@@ -104,7 +104,7 @@ function getCategoryProducts(filter_options) {
     });
 }
 
-function getProdoctByID(product_id) {
+function getProductByID(product_id) {
   let option = "?expand=item_variations,item_sliderimages"
   let url = product_id ? `${urls.list}${product_id}/${option}` : urls.list;
   return APIServices.get(url)
@@ -114,7 +114,7 @@ function getProdoctByID(product_id) {
     });
 }
 
-function getProdoctDetailByID(options_url) {
+function getProductDetailByID(options_url) {
   return APIServices.get(options_url)
     .then(APIServices.handleResponse)
     .then(response => {
@@ -122,7 +122,7 @@ function getProdoctDetailByID(options_url) {
     });
 }
 
-function getProdoctIntroQR(product_id) {
+function getProductIntroQR(product_id) {
   let url = `store/public/products/${product_id}/get_introduce_qr/`;
   return APIServices.get(url)
     .then(APIServices.handleResponse)

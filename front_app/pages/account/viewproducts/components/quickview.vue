@@ -142,7 +142,7 @@ export default {
       let self = this;
       self.productData={}
       this.loading = true;
-      await productService.getProdoctByID(this.productDataID)
+      await productService.getProductByID(this.productDataID)
         .then(response => {
           self.productData = response.item
         })
