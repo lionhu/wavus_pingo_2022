@@ -5,19 +5,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rolepermissions.checkers import has_role
 from store.models import OrderItem,  Order, Margin
-    # Category, InventoryHistory, Faq, Section, Logistic, Supplier, AddressBook, Item, \
-    # Variation, ItemSliderImage, ViewProductHistory, Comment, Thumbs, Favorite, \
-    # PointBank
 from store.serializers import OrderItemSerializer, OrderSerializer 
-# CategorySerializer, FaqSerializer, SectionSerializer, LogisticSerializer, \
-#     SupplierSerializer, AddressBookSerializer, ItemSerializer, VariationSerializer, \
-#     ItemSliderImageSerializer, ViewProductHistorySerializer, CommentSerializer, ThumbsSerializer, \
-#     FavoriteSerializer,  InventorySerializer,  PointBankSerializer, \
-#     MarginSerializer, CommentFullSerializer, ItemElasticSearchSerializer
 from store.mixins import DynamicQuerySetMixin, OrderMixin, OrderPointDistribution, \
     PointBankMixin, SquarePaymentMixin
-# from store.permissions import AddressBookPermission, CommentPermission, PointBankPermission, MarginPermission, \
-#     SupplierPermission, ProductPermission, ItemSliderImagePermission, VariationImagePermission
 from pingo.conf import settings as pingo_settings
 from store.signals import signalOrderItemStatusChanged, signalOrderItemSupplierPaymentChanged
 from store.exceptions import GenerateOrderError_InsufficientPoint, GenerateOrderError_CreditCardFailed

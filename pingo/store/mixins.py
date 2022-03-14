@@ -123,7 +123,7 @@ class OrderPointDistribution:
         Margin.objects.create(
             user=user,
             amount=amount,
-            type="OrderBonus" if level_type == "USER_SELF" else "DesendentOrderPoint",
+            type="OrderBonus" if level_type == "USER_SELF" else "DescendantOrderPoint",
             is_refound=1,
             is_valid=False,
             from_orderID=self.order.id,
@@ -455,7 +455,6 @@ class PointBankMixin:
         introduct_point = pingo_settings.SHOP_SETTINGS["INTRODUCE_POINT_POLICY"]
 
         if introduct_point == 0:
-            # if not introduction_point availalbe, quit
             return False
 
         parent = user.profile.parent.user if user.profile.parent else None

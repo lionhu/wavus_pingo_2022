@@ -4,9 +4,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from pingo.conf import settings as pingo_settings
 from core.mixins import RedisMixin
-from pingo.permissions import StaffActionPermission, SAFEActionPermission
-from store.models import Category, Item, Supplier, Logistic
-from store.serializers import CategorySerializer, ItemSerializer, ItemFullSerializer, SupplierSerializer, LogisticSerializer
+from pingo.permissions import StaffActionPermission 
+from store.models import Category,  Supplier, Logistic
+from store.serializers import CategorySerializer, SupplierSerializer, LogisticSerializer
 from django.contrib.auth import get_user_model
 
 import logging

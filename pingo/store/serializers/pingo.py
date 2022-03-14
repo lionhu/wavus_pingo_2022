@@ -1,8 +1,6 @@
 from rest_framework import serializers
 from rest_flex_fields import FlexFieldsModelSerializer
-from store.models import Category, Faq, Section, Logistic, Supplier, AddressBook, Item, \
-    ItemSliderImage, Variation, ViewProductHistory, Comment, Thumbs, Favorite, \
-    OrderItem, InventoryHistory, Order, PointBank, Margin, PingoItem, PingoOrder, \
+from store.models import  PingoItem, PingoOrder, \
     PingoItemSliderImage
 from store.serializers import SupplierSerializer, LogisticSerializer
 from rolepermissions.checkers import has_role

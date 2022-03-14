@@ -1,6 +1,5 @@
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework import status
 from store.serializers import ItemElasticSearchSerializer, PointBankElasticSearchSerializer, \
     FavoriteElasticSearchSerializer, ViewProductHistoryElasticSearchSerializer, \
     CommentElasticSearchSerializer, VariationElasticSearchSerializer
@@ -11,7 +10,6 @@ from store.models import Favorite
 import numpy as np
 from elasticsearch_dsl import Q as Q_elasticsearch
 from core.charts import objects_to_df, Chart, filter_objects
-from pingo.conf import settings as pingo_settings
 import logging
 
 logger = logging.getLogger("error_logger")

@@ -30,7 +30,7 @@ class ContextFlexFieldsModelSerialier(FlexFieldsModelSerializer):
     def get_fields(self):
         fields = super().get_fields()
 
-        if self.user is not None and has_role(self.user, ["superadmin"]):
+        if self.user is not None and has_role(self.user, ["superadmin","supplier"]):
             return fields
 
         if hasattr(self.Meta, "private_fields") and len(self.Meta.private_fields) > 0:
@@ -78,7 +78,6 @@ class SectionSerializer(FlexFieldsModelSerializer):
         read_only_fields = ("faqs",)
 
     def get_faqs(self, instance):
-        logger.error("get_faqs")
         user = self.context["request"].user
         if has_role(user, "staff") or has_role(user, "superadmin"):
             _faqs = Faq.objects.filter(section=instance)
