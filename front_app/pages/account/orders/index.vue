@@ -221,6 +221,7 @@ export default {
       ME: state => state.authfack.ME
     }),
     options(){
+      // return `me/?page=${this.page}&page_size=${this.page_size}`;
       return `me/?page=${this.page}&page_size=${this.page_size}&expand=orderitems`;
     }
   },

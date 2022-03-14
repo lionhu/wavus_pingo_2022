@@ -69,7 +69,7 @@ function PlacePingoOrder(order_detail) {
 }
 
 function loadOrders(options) {
-  let url = `${urls.order_CRUD}${options}&expand=orderitems`;
+  let url = `${urls.order_CRUD}${options}`;
   return APIServices.get(url)
     .then(response => {
       return response;

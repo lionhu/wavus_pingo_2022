@@ -1,23 +1,43 @@
 from rest_framework import serializers
 from rest_flex_fields import FlexFieldsModelSerializer
-from store.models import Category, Faq, Section, Logistic, Supplier, AddressBook, Item, \
-    ItemSliderImage, Variation, ViewProductHistory, Comment, Thumbs, Favorite, \
-    OrderItem, InventoryHistory, Order, PointBank, Margin, PingoItem, PingoOrder, \
-    PingoItemSliderImage
-from djoser.serializers import UserSerializer
+from store.models import Category, Faq, Section, Logistic, Supplier, AddressBook
 from rolepermissions.checkers import has_role
-import logging
-
-logger = logging.getLogger("error_logger")
+from djoser.serializers import UserSerializer
 
 __all__ = [
+    "ContextFlexFieldsModelSerialier",
+
     "CategorySerializer",
     "FaqSerializer",
     "SectionSerializer",
     "LogisticSerializer",
     "SupplierSerializer",
-    "AddressBookSerializer",
+    "AddressBookSerializer"
 ]
+
+
+class ContextFlexFieldsModelSerialier(FlexFieldsModelSerializer):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.context:
+            self._context = getattr(self.Meta, 'context', {})
+
+        try:
+            self.user = self.context["request"].user
+        except KeyError:
+            self.user = None
+
+    def get_fields(self):
+        fields = super().get_fields()
+
+        if self.user is not None and has_role(self.user, ["superadmin"]):
+            return fields
+
+        if hasattr(self.Meta, "private_fields") and len(self.Meta.private_fields) > 0:
+            for field_name in self.Meta.private_fields:
+                fields.pop(field_name)
+
+        return fields
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -39,7 +59,8 @@ class CategorySerializer(serializers.ModelSerializer):
         return result
 
 
-CategorySerializer._declared_fields['children'] = CategorySerializer(many=True, source='get_children', read_only=True)
+CategorySerializer._declared_fields['children'] = CategorySerializer(
+    many=True, source='get_children', read_only=True)
 
 
 class FaqSerializer(FlexFieldsModelSerializer):

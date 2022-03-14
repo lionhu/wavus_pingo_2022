@@ -165,7 +165,7 @@ class OrderPointDistribution:
 
 
 class DynamicQuerySetMixin:
-    dynamic_queryset = True
+    # dynamic_queryset = True
     model_class = None
     sorted_by = ()
 
@@ -202,7 +202,12 @@ class DynamicQuerySetMixin:
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
-        context.update({"request": self.request})
+        addRequestToContext = getattr(self,"dynamic_queryset", None)
+        
+        if addRequestToContext:
+            context.update({"request": self.request})
+            print("addRequestToContext")
+            
         return context
 
     def get_queryset(self):

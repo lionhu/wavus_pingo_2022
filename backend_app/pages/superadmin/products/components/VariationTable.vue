@@ -51,10 +51,6 @@ export default {
         }
     },
     computed: {
-        ...mapGetters({
-            // suppliers: "suppliers/getterSupplierList",
-            // categories: "categories/getProductCategories",
-        }),
         csrftoken () {
             return this.$auth.strategy.token.get()
         }
