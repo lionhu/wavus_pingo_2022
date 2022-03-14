@@ -40,7 +40,7 @@ class VariationSerializer(ContextFlexFieldsModelSerialier):
         fields = (
             "id", 'name', "description", "extra_cost", "is_valid", "price", "purchase_price", "inventory", "sku",
             "sort_by", "point_rule", "item", "variation_type", "type", "image", "image_url", "thumbimage_url")
-        private_fields = ("purchase_price", "point_rule", "extra_cost", )
+        private_fields = ("purchase_price",  "extra_cost", )
 
 
 class ItemSliderImageSerializer(FlexFieldsModelSerializer):
@@ -50,9 +50,9 @@ class ItemSliderImageSerializer(FlexFieldsModelSerializer):
         read_only_fields = ("image_url", "thumbimage_url",)
 
 
-class ItemSerializer(FlexFieldsModelSerializer):
+class ItemSerializer(ContextFlexFieldsModelSerialier):
     labels = serializers.JSONField()
-
+    item_variations = serializers.SerializerMethodField("get_item_variations_serializer")
     # supplier = SupplierSerializer(many=False)
 
     class Meta:
@@ -62,16 +62,25 @@ class ItemSerializer(FlexFieldsModelSerializer):
                   "description", "item_sliderimages", "thumbimage_url", "created_at",)
         read_only_fields = ("item_sliderimages", "item_variations", "image_url", "thumbimage_url",)
         expandable_fields = {
-            "item_variations": (VariationSerializer, {"many": True}),
+            # "item_variations": (VariationSerializer, {"many": True}),
             "item_sliderimages": (ItemSliderImageSerializer, {"many": True}),
             "supplier": (SupplierSerializer, {"many": False}),
             "category": (CategorySerializer, {"many": False}),
         }
+        # private_fields = ("description",)
+
+    def get_item_variations_serializer(self,obj):
+        serializer_context = {'request': self.context.get('request')}
+        variations = Variation.objects.all().filter(item=obj)
+        serializer = VariationSerializer(
+            variations, many=True, context=serializer_context)
+        return serializer.data
 
 
 class ItemFullSerializer(serializers.ModelSerializer):
     labels = serializers.JSONField()
-    item_variations = VariationSerializer(many=True)
+    item_variations = serializers.SerializerMethodField(
+        "get_item_variations_serializer")
     item_sliderimages = ItemSliderImageSerializer(many=True)
     supplier = SupplierSerializer(many=False)
 
@@ -82,6 +91,12 @@ class ItemFullSerializer(serializers.ModelSerializer):
                   "description", "item_sliderimages", "thumbimage_url", "created_at",)
         read_only_fields = ("item_sliderimages", "item_variations", "supplier", "image_url", "thumbimage_url",)
 
+    def get_item_variations_serializer(self, obj):
+        serializer_context = {'request': self.context.get('request')}
+        variations = Variation.objects.all().filter(item=obj)
+        serializer = VariationSerializer(
+            variations, many=True, context=serializer_context)
+        return serializer.data
 
 class ViewProductHistorySerializer(FlexFieldsModelSerializer):
     class Meta:

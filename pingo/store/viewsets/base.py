@@ -247,6 +247,7 @@ class FavoriteViewSet(DynamicQuerySetMixin, RedisMixin, ModelViewSet):
 class ProductViewSet(DynamicQuerySetMixin, RedisMixin, ModelViewSet):
     serializer_class = ItemSerializer
     model_class = Item
+    dynamic_queryset = True
     permission_classes = (ProductPermission,)
     filters = {
         "is_valid": True
@@ -282,6 +283,13 @@ class ProductViewSet(DynamicQuerySetMixin, RedisMixin, ModelViewSet):
         if has_role(request.user, ["superadmin", "staff", "supplier"]):
             self.filters = {}
 
+
+        response = super(self.__class__, self).retrieve(request, pk, *args, **kwargs)
+        product_data = response.data
+
+        return Response({"item": product_data}, status=status.HTTP_200_OK)
+    
+    
         prefix_redis = f"regular_product_{pk}"
         product_data = self.get_redis_data(prefix_redis, request)
 
