@@ -1,7 +1,16 @@
 {
     "nuxt.isNuxtApp": false,
-    // "editor.formatOnSave": true,
+    "editor.formatOnSave": true,
     "python.formatting.provider":"autopep8",
     "python.linting.enabled": true,
-    "python.linting.lintOnSave": true
+    "python.linting.lintOnSave": true,
+    // "veture.ignoreProjectWarning":true,
+    // "vetur.format.defaultFormatterOptions": {
+    //     "prettier":{
+    //         "singleQuote":true
+    //     }
+    // },
+    "prettier.singleQuote": true
+
+    
 }
