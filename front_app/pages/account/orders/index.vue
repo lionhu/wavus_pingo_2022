@@ -32,7 +32,7 @@
                                     <div class="col-xs-12 col-lg-6">
                                       <ThumbnailImage :item="item"
                                                       :number="item.quantity"
-                                                      v-for="item in props.row.orderitems"
+                                                      v-for="item in props.row.order_items"
                                                       :key="item.variation.id"></ThumbnailImage>
                                     </div>
                                     <div class="col-xs-12 col-lg-6"
@@ -222,7 +222,7 @@ export default {
     }),
     options(){
       // return `me/?page=${this.page}&page_size=${this.page_size}`;
-      return `me/?page=${this.page}&page_size=${this.page_size}&expand=orderitems`;
+      return `me/?page=${this.page}&page_size=${this.page_size}`;
     }
   },
   watch: {
@@ -357,58 +357,7 @@ export default {
     filterTag(value, row) {
       return row.is_paid === value;
     },
-    // isOrderDelivered(order) {
-    //   var result = true;
-    //   if (order.orderitems && order.orderitems.length) {
-    //     for (let item of order.orderitems) {
-    //       if (!item.delivered) {
-    //         result = false;
-    //         break;
-    //       }
-    //     }
-    //   }
-    //   return result;
-    // },
-    // showCartModal(order) {
-    //   this.showCreditModal = true;
-    //   this.order = order;
-    // },
-    // closeCreditModal() {
-    //   this.showCreditModal = false;
-    // },
-    // ShowModalPayment(order) {
-    //   this.showPaymentModal = true;
-    //   this.order = order;
-    // },
-    // closeModalPayment() {
-    //   this.showPaymentModal = false;
-    //   this.order = {};
-    // },
-    // removeOrder(order_id) {
-    //   Swal.fire({
-    //     title: "注文削除",
-    //     text: "注文を削除してもよろしいでしょうか？",
-    //     icon: 'warning',
-    //     showCancelButton: true,
-    //     confirmButtonColor: '#3085d6',
-    //     cancelButtonColor: '#d33',
-    //     cancelButtonText: "キャンセル",
-    //     confirmButtonText: 'はい、削除します!'
-    //   }).then((result) => {
-    //     if (result.isConfirmed) {
-    //       this.$store.dispatch('orders/deleteOrder', order_id).then((result) => {
-    //         if (result) {
-    //           Swal.fire(
-    //             '削除済み!',
-    //             '注文を削除いたしました.',
-    //             'success'
-    //           )
-    //         }
-    //       })
-    //
-    //     }
-    //   })
-    // }
+    
   }
 
 }

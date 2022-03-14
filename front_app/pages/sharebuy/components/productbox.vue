@@ -12,7 +12,8 @@
         </a>
       </div>
       <div class="cart-info cart-wrap">
-        <a href="javascript:void(0)" @click="showQuickview(product)" v-b-modal.modal-lg variant="primary">
+        <a href="javascript:void(0)" @click="showQuickview(product)" 
+        v-b-modal.modal-lg variant="primary" v-if="productHasInventory">
           <i class="ti-shopping-cart theme-bgcolor"></i>
         </a>
         <a href="javascript:void(0)" v-if="isLoggedIn">
@@ -24,7 +25,7 @@
           @click="ShowShareQR(product)"
           v-b-modal.modal-share-lg
           variant="primary"
-          v-if="isLoggedIn"
+          v-if="isLoggedIn && productHasInventory"
         >
           <i class="ti-share theme-bgcolor" aria-hidden="true"></i>
         </a>

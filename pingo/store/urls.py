@@ -7,6 +7,7 @@ from store.viewsets import CategoryViewSet, SectionViewSet, FaqViewSet, Logistic
     MarginViewSet, SystemViewSet, PingoProductViewSet, PingoOrderViewSet, PingoItemSliderImageViewSet, \
     FilterProductsViewSet, FilterPointBanksViewSet, FilterFavoritesViewSet, \
     FilterViewProductHistoriesViewSet, FilterCommentsViewSet, FilterVariationViewSet
+from .views import download_csv
 
 app_name = 'store'
 
@@ -45,4 +46,6 @@ from .views import HelloPDFView
 urlpatterns = [
     path("public/", include((router.urls, "store"), namespace="pingo_shop")),
     path('export_pdf/<str:order_type>/<uuid:slug>/', HelloPDFView, name="export_order_pdf"),
+    path('<int:supplier_id>/download_csv/<str:ordered_at__gte>/<str:ordered_at__lte>/', download_csv,
+         name="download_csv"),
 ]
