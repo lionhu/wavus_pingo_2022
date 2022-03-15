@@ -181,11 +181,8 @@ export default {
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
-                        <label for="field-name" class="control-label">Name
-                                                  <span class="text-danger">*</span>
-                                                </label>
+                        <label for="field-name" class="control-label">Name<span class="text-danger">*</span></label>
                         <input type="text" id="field-name" v-model="supplier.name" class="form-control" placeholder="会社名" />
-
                     </div>
                 </div>
             </div>
@@ -255,7 +252,7 @@ export default {
                 <div class="col-md-6">
                     <div class="form-group no-margin">
                         <label for="field-admin_id" class="control-label">Admin ID(#{{ supplier.user }})<span
-                                                  class="text-danger">*</span></label>
+                                                              class="text-danger">*</span></label>
                         <el-autocomplete v-model="admin.username" :fetch-suggestions="querySearchAsync" placeholder="请输入内容" @select="handleSelect"></el-autocomplete>
                         <input type="text" id="field-admin_id" v-model="supplier.user" class="form-control" hidden/>
 

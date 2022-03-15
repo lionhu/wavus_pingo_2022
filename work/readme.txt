@@ -14,3 +14,6 @@ Elasticsearch
 
 --> solution
  python manage.py search_index --rebuild
+
+
+pip freeze > requirements.txt
