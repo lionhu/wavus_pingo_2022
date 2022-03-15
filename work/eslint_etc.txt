@@ -4,7 +4,6 @@ Since the Vue CLI does not support Vite as yet, we need to configure these thing
 - Tailwind CSS
 - Vue Router
 - Vuex
-
 Find the final code here: https://github.com/ahmedh01/starter-t...
 
 Installation commands that I paste in:

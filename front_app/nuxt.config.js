@@ -1,6 +1,5 @@
 import * as FontAwesome from './plugins/fontawesome'
 import Sass from 'sass'
-import Fiber from 'fibers'
 
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
@@ -196,14 +195,7 @@ export default {
         }
       }
     },
-    loaders: {
-      scss: {
-        implementation: Sass,
-        sassOptions: {
-          fiber: Fiber
-        }
-      }
-    }
+
   },
 
   watchers: {

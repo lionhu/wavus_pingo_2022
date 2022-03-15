@@ -1,0 +1,23 @@
+{
+    "eslint.validate": [
+        "javascript",
+        "vue"
+      ],
+      "html.format.wrapAttributes": "preserve",
+      "html.format.preserveNewLines": true,
+    "vetur.validation.template": false,
+    "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[vue]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+    },
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    // "editor.formatOnSave": true,
+    
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true,
+    },
+  }
