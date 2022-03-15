@@ -28,6 +28,10 @@ module.exports = {
         "@typescript-eslint/no-unused-vars": 1,
         camelcase: "off",
         "@typescript-eslint/camelcase": "off",
-        "vue/prop-name-casing": ["error", "camelCase" | "snake_case"]
+        "vue/prop-name-casing": ["error", "camelCase" | "snake_case"],
+        "vue/html-closing-bracket-newline": ["error", {
+            "singleline": "never",
+            "multiline": "never"
+        }]
     },
 }
