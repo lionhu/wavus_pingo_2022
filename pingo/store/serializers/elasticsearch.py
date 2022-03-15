@@ -25,8 +25,6 @@ class DynamicSearchSerializer(ModelSerializer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         omit_fields = self.context.get('omit_fields', None)
-        print("__init__ FavoriteElasticSearchSerializer")
-        print(omit_fields)
         if omit_fields:
             for field_name in omit_fields:
                 self.fields.pop(field_name)

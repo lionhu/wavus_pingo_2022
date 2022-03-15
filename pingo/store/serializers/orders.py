@@ -27,13 +27,14 @@ class OrderItemFULLSerializer(ContextFlexFieldsModelSerialier):
                   )
         private_fields = ("total_purchase_price", "profit",)
 
-    def get_variation_serializer(self,obj):
+    def get_variation_serializer(self, obj):
         serializer_context = {'request': self.context.get('request')}
         variation = Variation.objects.get(pk=obj.variation_id)
         serializer = VariationSerializer(
             variation, many=False, context=serializer_context)
         return serializer.data
-    
+
+
 class OrderSerializer(ContextFlexFieldsModelSerialier):
     order_items = serializers.SerializerMethodField(
         "get_order_items_serializer")
@@ -51,11 +52,11 @@ class OrderSerializer(ContextFlexFieldsModelSerialier):
         fields = ('id',  'slug', "type", "status", "supplier_paid", 'start_date', 'ordered_at', "ordered",
                   "is_valid",  "json_shippingaddress", "Qty", "Total", "chargeAmount", "point_usage", "order_bonus",
                   "message", "is_paid", "payment_status", "payment_method", "payment_id", "payment_info",
-                  "is_delivered", "delivered_at", "delivery_info", 
+                  "is_delivered", "delivered_at", "delivery_info", "total",
                   "user", "logistic", "order_items",)
         read_only_fields = ("payment_status", "payment_method", "payment_id", "payment_info", 'slug',
                             "orderitems", 'start_date', 'ordered_at', "ordered",
-                            "is_valid", "is_paid", "json_shippingaddress", "supplier_paid",)
+                            "is_valid", "is_paid", "json_shippingaddress", "supplier_paid", "total",)
         expandable_fields = {
             "user": (PingoUserSerializer, {"many": False}),
             "logistic": (LogisticSerializer, {"many": False}),
@@ -69,7 +70,7 @@ class OrderSerializer(ContextFlexFieldsModelSerialier):
         serializer = OrderItemFULLSerializer(
             items, many=True, context=serializer_context)
         return serializer.data
-    
+
     def create(self, validated_data):
         order = Order.objects.create(**validated_data)
         if len(validated_data["cart_items"]):
@@ -108,7 +109,7 @@ class OrderItemSerializer(FlexFieldsModelSerializer):
         request = self.context.get('request', None)
         print("OrderItemSerializer __init___")
         print(request)
-        if request is not None and  has_role(request.user, ["superadmin", "staff", "supplier"]):
+        if request is not None and has_role(request.user, ["superadmin", "staff", "supplier"]):
             if hasattr(self.Meta, "private_fields") and len(self.Meta.private_fields) > 0:
 
                 print("OrderItemSerializer push private_fields")
