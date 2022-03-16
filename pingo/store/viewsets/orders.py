@@ -345,8 +345,7 @@ class OrderViewSet(DynamicQuerySetMixin,
             if "status" in update_fields:
                 Order.objects.filter(pk__in=ids).update(**update_info)
                 
-                # TODO by lionhu
-                # tasks for different status
+                # TODO: add tasks for different status
                 
                 
             # if "delivery" in update_fields:
