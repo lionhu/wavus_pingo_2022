@@ -2,6 +2,7 @@
 import Swal from 'sweetalert2'
 import { orderService } from '~/helpers/order.service'
 import { Functions } from '~/helpers/functions'
+import { swalService } from '~/helpers/swal.service'
 
 export default {
     name: 'order_detail',
@@ -30,7 +31,6 @@ export default {
             title: 'シェア買注文',
             items: [{ text: 'PINGO' }, { text: 'eCommerce' }, { text: 'シェア買注文', active: true }],
             status_options: [
-                { label: 'すべて', value: 'ALL' },
                 { label: 'NEW', value: 'NEW' },
                 { label: 'PROCESSING', value: 'PROCESSING' },
                 { label: 'DELIVERING', value: 'DELIVERING' },
@@ -140,75 +140,97 @@ export default {
         updateOrder(order_id, info) {
             console.log(info)
         },
-        async batch_updateOrderStatus() {
-            let self = this
-            let _order_ids = []
-            this.multipleSelection.forEach((order_id) => {
-                let itemIndex = self.orders.findIndex((order) => order.id === order_id)
-                if (itemIndex > -1) {
-                    if (self.orders[itemIndex].status === 'DELIVERING') {
-                        _order_ids.push(order_id)
-                    }
-                }
-            })
-
-            console.log('batch_updateOrderStatus', _order_ids)
-            let selected_num = _order_ids.length
-            if (selected_num > 0) {
-                const { value: _status } = await Swal.fire({
-                    title: 'Select Status',
-                    html: `注文対象：${JSON.stringify(_order_ids)}`,
-                    input: 'select',
-                    inputOptions: {
-                        COMPLETED: 'COMPLETED',
-                    },
-                    inputPlaceholder: 'Select a status',
-                    showCancelButton: true,
-                })
-                if (_status === 'COMPLETED') {
-                    orderService
-                        .ordercompleted_batch({
-                            order_ids: _order_ids,
-                            status: _status,
-                        })
-                        .then((response) => {
-                            if (response.result) {
-                                self.replaceOrderStatus(_order_ids, _status)
-                            }
-                        })
-                }
-            } else {
+        async updateOrderStatus(order_id, batch = false) {
+            const self = this
+            if (this.multipleSelection.length == 0 && batch) {
                 Swal.fire('注意', '何も選択されていないです！', 'warning')
+                return null
             }
-        },
-        batch_RemoveOrders() {
-            if (this.multipleSelection.length) {
-                let self = this
-                let _order_ids = []
-                self.multipleSelection.forEach((order_id) => {
-                    let itemIndex = self.orders.findIndex((order) => order.id === order_id)
-                    if (itemIndex > -1) {
-                        if (self.orders[itemIndex].payment_status === 'CANCELED') {
-                            _order_ids.push(order_id)
-                        }
+            const target = batch ? JSON.stringify(this.multipleSelection) : order_id
+            Swal.fire({
+                title: 'Select Status',
+                html: `注文対象 ID：${target}`,
+                input: 'select',
+                inputOptions: {
+                    NEW: 'NEW',
+                    PROCESSING: 'PROCESSING',
+                    DELIVERING: 'DELIVERING',
+                    COMPLETED: 'COMPLETED',
+                },
+                inputPlaceholder: 'Select a status',
+                showCancelButton: true,
+                confirmButtonText: 'Submit',
+                showLoaderOnConfirm: true,
+                preConfirm: (status) => {
+                    if (batch) {
+                        return orderService
+                            .updateOrder_BATCH_superadmin({
+                                ids: self.multipleSelection,
+                                update_fields: ['status'],
+                                update_info: {
+                                    status,
+                                },
+                            })
+                            .then((response) => {
+                                response.ids.forEach((order_id) => {
+                                    self.replaceOrderInfo(order_id, status)
+                                })
+                            })
+                            .catch((error) => {
+                                Swal.showValidationMessage(`Request failed: ${error}`)
+                            })
+                    } else {
+                        return orderService
+                            .updateOrder_superadmin({
+                                id: order_id,
+                                update_fields: ['status'],
+                                update_info: {
+                                    status,
+                                },
+                            })
+                            .then((response) => {
+                                if (response.order_id) {
+                                    self.replaceOrderInfo(order_id, status)
+                                }
+                            })
+                            .catch((error) => {
+                                Swal.showValidationMessage(`Request failed: ${error}`)
+                            })
                     }
+                },
+                allowOutsideClick: () => !Swal.isLoading(),
+            })
+        },
+        RemoveOrder(order) {
+            let self = this
+            const order_id = order.id
+
+            if (order.status === 'NEW') {
+                Swal.fire({
+                    title: '注文削除?',
+                    html: `注文対象 ID：${order_id}`,
+                    showCancelButton: true,
+                    confirmButtonText: 'Submit',
+                    confirmButtonColor: '#dc3545',
+                    showLoaderOnConfirm: true,
+                    preConfirm: (status) => {
+                        return orderService
+                            .removeOrder_superadmin(order_id)
+                            .then((response) => {
+                                let orderindex = self.orders.findIndex((order) => order.id == order_id)
+                                if (orderindex > -1) {
+                                    self.orders.splice(orderindex, 1)
+                                }
+                                swalService.showModal('削除された!', '注文は削除されました.', 'success')
+                            })
+                            .catch((error) => {
+                                Swal.showValidationMessage(`Request failed: ${error}`)
+                            })
+                    },
+                    allowOutsideClick: () => !Swal.isLoading(),
                 })
-                if (_order_ids.length) {
-                    console.log(_order_ids)
-                    this.$store.dispatch('orders/batch_removeOrders_superadmin', _order_ids).then((response) => {
-                        response.ids.forEach((order_id) => {
-                            let orderindex = self.orders.findIndex((order) => order.id == order_id)
-                            if (orderindex > -1) {
-                                self.orders.splice(orderindex, 1)
-                            }
-                        })
-                        swalService.showModal('削除された!', '注文は削除されました.', 'success')
-                    })
-                } else {
-                    Swal.fire('Warning', 'Only NEW orders can be removed', 'warning')
-                }
             } else {
-                Swal.fire('Warning', 'you have to choose more than one', 'warning')
+                Swal.fire('Warning', 'Onle NEW order can be removed', 'warning')
             }
         },
         handleSelectionChange(val) {
@@ -245,14 +267,12 @@ export default {
                 this.showmodal_payment_status = false
             }
         },
-        replaceOrderStatus(ids, status) {
-            ids.forEach((id) => {
-                let index = this.orders.findIndex((order) => order.id === id)
-                if (index > -1) {
-                    this.orders[index].status = status
-                    this.orders[index].payment_status = status
-                }
-            })
+        replaceOrderInfo(order_id, status) {
+            let index = this.orders.findIndex((order) => order.id === order_id)
+            if (index > -1) {
+                this.orders[index].status = status
+                this.orders[index].payment_status = status
+            }
         },
         replaceOrderPaymentStatus(ids, payment_status) {
             ids.forEach((id) => {
@@ -306,13 +326,12 @@ export default {
                                     <b-dropdown-item>
                                         <a href="javascript:void(0);" v-b-modal:modal-update-payment @click="update_order_payment_status('multiple', null)">カード決済</a>
                                     </b-dropdown-item>
-                                    <b-dropdown-item>
-                                        <a href="javascript:void(0);" @click="batch_updateOrderStatus" v-if="order_filters.status === 'DELIVERING'">注文ステータス更新</a>
+                                    <b-dropdown-item v-if="multipleSelection.length">
+                                        <a href="javascript:void(0);" @click="updateOrderStatus(0, true)">注文ステータス更新</a>
                                     </b-dropdown-item>
-                                    <!--                  <b-dropdown-item>-->
-                                    <!--                    <a href="javascript:void(0);" @click="batch_RemoveOrders"><i class="fe-trash-2 text-danger"></i>-->
-                                    <!--                      注文削除</a>-->
-                                    <!--                  </b-dropdown-item>-->
+                                    <!-- <b-dropdown-item>
+                                        <a href="javascript:void(0);" @click="batch_RemoveOrders(null, true)"><i class="fe-trash-2 text-danger"></i> 注文削除</a>
+                                    </b-dropdown-item> -->
                                 </b-dropdown>
                             </div>
                         </div>
@@ -365,7 +384,6 @@ export default {
                             </div>
                             <el-table :data="orders" style="width: 100%" @selection-change="handleSelectionChange">
                                 <el-table-column type="selection" width="30"></el-table-column>
-
                                 <el-table-column type="expand">
                                     <template slot-scope="props">
                                         <div v-if="props.row.message !== ''">
@@ -392,7 +410,9 @@ export default {
                                 </el-table-column>
                                 <el-table-column label="ステータス">
                                     <template slot-scope="scope">
-                                        <b-badge :variant="get_badge_color(scope.row.status)" pill>{{ scope.row.status }}</b-badge>
+                                        <a href="javascript:void(0);" @click="updateOrderStatus(scope.row.id, false)">
+                                            <b-badge :variant="get_badge_color(scope.row.status)" pill>{{ scope.row.status }}</b-badge>
+                                        </a>
                                     </template>
                                 </el-table-column>
                                 <el-table-column label="会員" sortable width="100" prop="user.username"></el-table-column>
@@ -419,6 +439,11 @@ export default {
                                             <li class="list-inline-item">
                                                 <a href="javascript:void(0)" v-b-modal:modal-send-order-mail-selector @click="showSendOrderMail(scope.row)" class="action-icon text-success">
                                                     <i class="fe-send"></i>
+                                                </a>
+                                            </li>
+                                            <li class="list-inline-item" v-if="scope.row.status === 'NEW'">
+                                                <a href="javascript:void(0)" @click="RemoveOrder(scope.row)" class="action-icon text-danger">
+                                                    <i class="fe-trash"></i>
                                                 </a>
                                             </li>
                                         </ul>

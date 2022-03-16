@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rolepermissions.checkers import has_role
 from store.models import OrderItem,  Order, Margin
-from store.serializers import OrderItemSerializer, OrderSerializer 
+from store.serializers import OrderItemSerializer, OrderSerializer
 from store.mixins import DynamicQuerySetMixin, OrderMixin, OrderPointDistribution, \
     PointBankMixin, SquarePaymentMixin
 from pingo.conf import settings as pingo_settings
@@ -19,10 +19,11 @@ import logging
 logger = logging.getLogger("error_logger")
 User = get_user_model()
 
-__all__=[
+__all__ = [
     "OrderViewSet",
     "OrderItemViewSet"
 ]
+
 
 class OrderViewSet(DynamicQuerySetMixin,
                    OrderMixin,
@@ -79,7 +80,8 @@ class OrderViewSet(DynamicQuerySetMixin,
                 # CreditCard Payment
                 if order.Total == order.chargeAmount and nonce:
                     logger.error(" Pay by Creditcard")
-                    pay_order_with_card = self.pay_order_byCreditCard("REGULAR", order, nonce)
+                    pay_order_with_card = self.pay_order_byCreditCard(
+                        "REGULAR", order, nonce)
 
                     order.payment_info = pay_order_with_card["payment_details"]
                     order.payment_method = "CARD"
@@ -97,11 +99,13 @@ class OrderViewSet(DynamicQuerySetMixin,
                 # MIX Payment
                 elif order.chargeAmount > 0 and order.Total > order.chargeAmount and nonce:
                     logger.error(" Pay by MIX")
-                    holdPointInfo = self.pointbank_user_totalpoint(request.user.id)
+                    holdPointInfo = self.pointbank_user_totalpoint(
+                        request.user.id)
                     if cart_use_point > holdPointInfo:
                         raise GenerateOrderError_InsufficientPoint
 
-                    pay_order_with_card = self.pay_order_byCreditCard(order, nonce)
+                    pay_order_with_card = self.pay_order_byCreditCard(
+                        order, nonce)
 
                     order.payment_info = pay_order_with_card["payment_details"]
                     order.payment_status = pay_order_with_card["payment_status"]
@@ -128,8 +132,10 @@ class OrderViewSet(DynamicQuerySetMixin,
                 # Point Payment
                 else:
                     # Pay by  Point
-                    holdPointInfo = self.pointbank_user_totalpoint(request.user.id)
-                    logger.error("user holdPointInfo:{}, want to user point:{}".format(holdPointInfo, cart_use_point))
+                    holdPointInfo = self.pointbank_user_totalpoint(
+                        request.user.id)
+                    logger.error("user holdPointInfo:{}, want to user point:{}".format(
+                        holdPointInfo, cart_use_point))
 
                     if cart_use_point > holdPointInfo:
                         raise GenerateOrderError_InsufficientPoint
@@ -169,7 +175,8 @@ class OrderViewSet(DynamicQuerySetMixin,
                 if pingo_settings.SUPPLIER_AUTO_SEND_NEW_ORDERITEM_EMAIL:
                     _ids = [orderitem.id for orderitem in order.orderitems.all()]
                     if len(_ids):
-                        pingo_settings.TASKS.notify_supplier_orderitem_batch(_ids)
+                        pingo_settings.TASKS.notify_supplier_orderitem_batch(
+                            _ids)
 
                 logger.error("notify user new order")
 
@@ -237,7 +244,8 @@ class OrderViewSet(DynamicQuerySetMixin,
             self.create_pointbank_from_margin(margin)
 
         OrderItem.objects.filter(order=order).delete()
-        Margin.objects.filter(from_orderID=order.id, order_type="REGULAR").delete()
+        Margin.objects.filter(from_orderID=order.id,
+                              order_type="REGULAR").delete()
         order.delete()
 
         # redis_key = settings.REDIS_KEYS["USER"]["POINTBANKS"]
@@ -264,8 +272,10 @@ class OrderViewSet(DynamicQuerySetMixin,
                 order.payment_info = payment["payment_details"]
                 order.save()
 
-                OrderItem.objects.filter(order=order).update(status="COMPLETED")
-                Margin.objects.filter(from_orderID=order.id).update(is_valid=True)
+                OrderItem.objects.filter(
+                    order=order).update(status="COMPLETED")
+                Margin.objects.filter(
+                    from_orderID=order.id).update(is_valid=True)
 
                 order_margins = Margin.objects.filter(from_orderID=order.id)
                 if order_margins.exists():
@@ -303,9 +313,11 @@ class OrderViewSet(DynamicQuerySetMixin,
                 if to_supplier:
                     print("notify supplier new order")
                     if pingo_settings.SUPPLIER_AUTO_SEND_NEW_ORDERITEM_EMAIL:
-                        _ids = [orderitem.id for orderitem in order.orderitems.all()]
+                        _ids = [
+                            orderitem.id for orderitem in order.orderitems.all()]
                         if len(_ids):
-                            pingo_settings.TASKS.notify_supplier_orderitem_batch(_ids)
+                            pingo_settings.TASKS.notify_supplier_orderitem_batch(
+                                _ids)
                 if to_user:
                     print("notify user new order")
                     if pingo_settings.SEND_MEMBER_NEW_ORDER_EMAIL:
@@ -313,13 +325,109 @@ class OrderViewSet(DynamicQuerySetMixin,
 
                 print("notify superadmin new order")
                 _content = f"Send {mail_type} order mail, to_user:{to_user}, to_supplier:{to_supplier}"
-                pingo_settings.TASKS.common_notification(pingo_settings.ADMIN_EMAIL, _content)
+                pingo_settings.TASKS.common_notification(
+                    pingo_settings.ADMIN_EMAIL, _content)
 
             return Response(request.data, status=status.HTTP_200_OK)
         except Exception as err:
             return Response({
                 "message": PrintExceptionError(err)
             }, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(methods=["post"], detail=False)
+    def update_batch(self, request, *args, **kwargs):
+        try:
+            ids = request.data.get("ids", [])
+            update_fields = request.data.get("update_fields", [])
+            update_info = request.data.get("update_info", {})
+
+            logger.error(request.data)
+            if "status" in update_fields:
+                Order.objects.filter(pk__in=ids).update(**update_info)
+                
+                # TODO by lionhu
+                # tasks for different status
+                
+                
+            # if "delivery" in update_fields:
+            #     logistic_id = request.data.get("logistic_id", None)
+            #     delivery_info = request.data.get("delivery_info", None)
+            #     delivered_at = request.data.get("delivered_at", None)
+            #     delivered = request.data.get("delivered", False)
+
+            #     OrderItem.objects.filter(pk__in=orderitem_ids).update(
+            #         delivered=delivered,
+            #         delivered_at=delivered_at,
+            #         delivery_info=delivery_info,
+            #         logistic_id=logistic_id,
+            #         status="DELIVERING" if delivered else "PROCESSING"
+            #     )
+
+            #     orderitems = OrderItem.objects.filter(pk__in=orderitem_ids)
+            #     if delivered:
+            #         for _item in orderitems:
+            #             signalOrderItemStatusChanged.send(_item, status="DELIVERING")
+
+            # if "pay_supplier" in update_fields:
+            #     pay_supplier_info = request.data.get("pay_supplier_info", {})
+            #     supplier_paid = pay_supplier_info["paid"]
+            #     OrderItem.objects.filter(pk__in=orderitem_ids).update(**pay_supplier_info)
+
+            #     orderitems = OrderItem.objects.filter(pk__in=orderitem_ids)
+            #     if supplier_paid:
+            #         for _item in orderitems:
+            #             signalOrderItemSupplierPaymentChanged.send(_item)
+
+            # serializer_orderitems = self.get_serializer(instance=orderitems, many=True)
+
+            logger.error(request.data)
+            return Response({
+                "ids": ids
+            }, status=status.HTTP_200_OK)
+        except Exception as err:
+            return Response({
+                'error': 'UpdateBatch_Err01',
+                'message': PrintExceptionError(err)
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+    def update(self, request, pk=None, *args, **kwargs):
+        try:
+            print(request.data)
+            update_fields = request.data.get("update_fields", None)
+
+            if update_fields is None:
+                return Response({
+                    "error": "ORDER_UPDATE_01",
+                    "message": "update_fields is required",
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            update_info = request.data.get("update_info", {})
+            Order.objects.filter(pk=pk).update(**update_info)
+
+            if "delivery" in update_fields:
+                update_info = request.data.get("update_info", None)
+                if update_info and update_info["delivered"]:
+                    if pingo_settings.NOTIFICATIONS["USER_ORDER_DELIVERED"]:
+                        pingo_settings.TASKS.notify_member_order_delivered(pk, update_info)
+
+                    if pingo_settings.NOTIFICATIONS["SUPERADMIN_ORDER_DELIVERED"]:
+                        pingo_settings.TASKS.notify_superadmin_order_delivered(pk, update_info)
+
+            if "status" in update_fields:
+                _status = update_info["status"]
+                print(f"status update_fields {_status}")
+                # if _status == "PROCESSING":
+                #     pingo_settings.TASKS.notify_supplier_order(pk)
+
+            return Response({
+                "order_id": pk
+            }, status=status.HTTP_200_OK)
+        except Exception as err:
+            return Response({
+                "error": "ORDER_UPDATE_02",
+                "message": PrintExceptionError(err),
+            }, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 class OrderItemViewSet(DynamicQuerySetMixin, ModelViewSet):
