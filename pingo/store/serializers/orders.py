@@ -40,7 +40,7 @@ class OrderSerializer(ContextFlexFieldsModelSerialier):
         "get_order_items_serializer")
     point_usage = serializers.JSONField()
     order_bonus = serializers.JSONField()
-    # cart_items = serializers.JSONField()
+    cart_items = serializers.JSONField()
     json_shippingaddress = serializers.JSONField()
     delivery_info = serializers.JSONField(required=False)
     chargeAmount = serializers.IntegerField()
@@ -49,7 +49,7 @@ class OrderSerializer(ContextFlexFieldsModelSerialier):
 
     class Meta:
         model = Order
-        fields = ('id',  'slug', "type", "status", "supplier_paid", 'start_date', 'ordered_at', "ordered",
+        fields = ('id',  'slug', "type", "status", "supplier_paid", 'start_date', 'ordered_at', "ordered","cart_items",
                   "is_valid",  "json_shippingaddress", "Qty", "Total", "chargeAmount", "point_usage", "order_bonus",
                   "message", "is_paid", "payment_status", "payment_method", "payment_id", "payment_info",
                   "is_delivered", "delivered_at", "delivery_info", "total",
