@@ -47,3 +47,8 @@ module.exports = {
     bracketSpacing: true,
     arrowParens: 'always',
   }
+
+
+
+  sudo npm install -g eslint eslint-config-airbnb eslint-plugin-import eslint-plugin-vue 
+  

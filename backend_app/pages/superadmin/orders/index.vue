@@ -1,45 +1,46 @@
 <script>
-import {mapGetters} from "vuex"
+import { mapGetters } from "vuex";
 import Swal from "sweetalert2";
-import {orderService} from "~/helpers/order.service"
+import { orderService } from "~/helpers/order.service";
 
 export default {
   name: "order_detail",
   head() {
     return {
       title: `${this.title} | WAVUS, PINGO`,
-      script: [
-        {src: 'https://unpkg.com/element-ui/lib/index.js'}
-      ],
+      script: [{ src: "https://unpkg.com/element-ui/lib/index.js" }],
       link: [
-        {rel: 'stylesheet', href: 'https://unpkg.com/element-ui/lib/theme-chalk/index.css'}
+        {
+          rel: "stylesheet",
+          href: "https://unpkg.com/element-ui/lib/theme-chalk/index.css"
+        }
       ]
     };
   },
   components: {
-    "el-table": () => import('element-ui/lib/table'),
-    "el-table-column": () => import('element-ui/lib/table-column'),
-    "el-date-picker": () => import('element-ui/lib/date-picker'),
-    "el-select": () => import('element-ui/lib/select'),
-    "el-option": () => import('element-ui/lib/option'),
+    "el-table": () => import("element-ui/lib/table"),
+    "el-table-column": () => import("element-ui/lib/table-column"),
+    "el-date-picker": () => import("element-ui/lib/date-picker"),
+    "el-select": () => import("element-ui/lib/select"),
+    "el-option": () => import("element-ui/lib/option"),
     UpdatePaymentModal: () => import("../widgets/modalUpdatePayment"),
     SendOrderMailSelector: () => import("../components/SendOrderMailSelector"),
-    "user_selector": () => import('~/components/widgets/RemoteUserSelect'),
+    user_selector: () => import("~/components/widgets/RemoteUserSelect")
   },
   data() {
     return {
       title: "シェア買注文",
       items: [
-        {text: "PINGO"},
-        {text: "eCommerce"},
-        {text: "シェア買注文", active: true}
+        { text: "PINGO" },
+        { text: "eCommerce" },
+        { text: "シェア買注文", active: true }
       ],
       status_options: [
-        {label: "すべて", value: "ALL"},
-        {label: "NEW", value: "NEW"},
-        {label: "PROCESSING", value: "PROCESSING"},
-        {label: "DELIVERING", value: "DELIVERING"},
-        {label: "COMPLETED", value: "COMPLETED"}
+        { label: "すべて", value: "ALL" },
+        { label: "NEW", value: "NEW" },
+        { label: "PROCESSING", value: "PROCESSING" },
+        { label: "DELIVERING", value: "DELIVERING" },
+        { label: "COMPLETED", value: "COMPLETED" }
       ],
       order_filters: {
         ordered_at__gte: this.week_before(),
@@ -75,23 +76,23 @@ export default {
     }),
 
     options() {
-      let _options = `?page_size=${this.orders_meta.page_size}&page=${this.orders_meta.page}&expand=user`
+      let _options = `?page_size=${this.orders_meta.page_size}&page=${this.orders_meta.page}&expand=user`;
 
       if (this.order_filters.ordered_at__gte !== "") {
-        let ordered_at__gte = new Date(this.order_filters.ordered_at__gte)
-        _options += `&filter{ordered_at__gte}=${ordered_at__gte.toISOString()}`
+        let ordered_at__gte = new Date(this.order_filters.ordered_at__gte);
+        _options += `&filter{ordered_at__gte}=${ordered_at__gte.toISOString()}`;
       }
 
       if (this.order_filters.ordered_at__lte !== "") {
-        let ordered_at__lte = new Date(this.order_filters.ordered_at__lte)
-        _options += `&filter{ordered_at__lte}=${ordered_at__lte.toISOString()}`
+        let ordered_at__lte = new Date(this.order_filters.ordered_at__lte);
+        _options += `&filter{ordered_at__lte}=${ordered_at__lte.toISOString()}`;
       }
 
       if (this.order_filters.user_id > 0) {
-        _options += `&filter{user_id}=${parseInt(this.order_filters.user_id)}`
+        _options += `&filter{user_id}=${parseInt(this.order_filters.user_id)}`;
       }
       if (this.order_filters.status !== "ALL") {
-        _options += `&filter{status}=${this.order_filters.status}`
+        _options += `&filter{status}=${this.order_filters.status}`;
       }
 
       return _options;
@@ -99,28 +100,28 @@ export default {
   },
   methods: {
     reset_filters() {
-      this.selectUser = null
+      this.selectUser = null;
       this.order_filters.user_id = 0;
       this.orders_meta = {
         links: {},
         page: 1,
         page_size: 100,
         total: 0
-      }
-      this.orders = []
+      };
+      this.orders = [];
     },
     handleSelectUser(selectedUser) {
       if (selectedUser !== null) {
-        this.selectUser = selectedUser
+        this.selectUser = selectedUser;
         this.order_filters.user_id = selectedUser.id;
       } else {
-        this.selectUser = null
+        this.selectUser = null;
         this.order_filters.user_id = 0;
       }
     },
     tablePageChange(page) {
       this.orders_meta.page = page;
-      this.load_orders()
+      this.load_orders();
     },
     week_before() {
       let dt = new Date();
@@ -128,19 +129,17 @@ export default {
     },
     change_status(status) {
       this.order_filters.status = status;
-      this.reset_filters()
+      this.reset_filters();
     },
     async load_orders() {
       let self = this;
       self.isLoading = true;
-      console.log(this.options)
-      await orderService.get_list(this.options)
-        .then(response => {
-          console.log(response)
-          self.orders = response.results;
-          self.orders_meta = response.meta;
-
-        })
+      console.log(this.options);
+      await orderService.get_list(this.options).then(response => {
+        console.log(response);
+        self.orders = response.results;
+        self.orders_meta = response.meta;
+      });
 
       self.isLoading = false;
       // this.$store.dispatch("orders/load_filteredlist_superadmin", this.order_filters)
@@ -155,38 +154,38 @@ export default {
       let self = this;
       let _order_ids = [];
       this.multipleSelection.forEach(order_id => {
-        let itemIndex = self.orders.findIndex(order => order.id === order_id)
+        let itemIndex = self.orders.findIndex(order => order.id === order_id);
         if (itemIndex > -1) {
           if (self.orders[itemIndex].status === "DELIVERING") {
-            _order_ids.push(order_id)
+            _order_ids.push(order_id);
           }
         }
-      })
+      });
 
-
-      console.log("batch_updateOrderStatus", _order_ids)
+      console.log("batch_updateOrderStatus", _order_ids);
       let selected_num = _order_ids.length;
       if (selected_num > 0) {
-        const {value: _status} = await Swal.fire({
-          title: 'Select Status',
+        const { value: _status } = await Swal.fire({
+          title: "Select Status",
           html: `注文対象：${JSON.stringify(_order_ids)}`,
-          input: 'select',
+          input: "select",
           inputOptions: {
-            'COMPLETED': 'COMPLETED'
+            COMPLETED: "COMPLETED"
           },
-          inputPlaceholder: 'Select a status',
-          showCancelButton: true,
-        })
+          inputPlaceholder: "Select a status",
+          showCancelButton: true
+        });
         if (_status === "COMPLETED") {
-          orderService.ordercompleted_batch({order_ids: _order_ids, status: _status})
+          orderService
+            .ordercompleted_batch({ order_ids: _order_ids, status: _status })
             .then(response => {
               if (response.result) {
-                self.replaceOrderStatus(_order_ids, _status)
+                self.replaceOrderStatus(_order_ids, _status);
               }
-            })
+            });
         }
       } else {
-        Swal.fire("注意", "何も選択されていないです！", "warning")
+        Swal.fire("注意", "何も選択されていないです！", "warning");
       }
     },
     batch_RemoveOrders() {
@@ -194,46 +193,53 @@ export default {
         let self = this;
         let _order_ids = [];
         self.multipleSelection.forEach(order_id => {
-          let itemIndex = self.orders.findIndex(order => order.id === order_id)
+          let itemIndex = self.orders.findIndex(order => order.id === order_id);
           if (itemIndex > -1) {
-            if (self.orders[itemIndex].payment_status === 'CANCELED') {
-              _order_ids.push(order_id)
+            if (self.orders[itemIndex].payment_status === "CANCELED") {
+              _order_ids.push(order_id);
             }
           }
-        })
+        });
         if (_order_ids.length) {
-          console.log(_order_ids)
-          this.$store.dispatch("orders/batch_removeOrders_superadmin", _order_ids)
+          console.log(_order_ids);
+          this.$store
+            .dispatch("orders/batch_removeOrders_superadmin", _order_ids)
             .then(response => {
               response.ids.forEach(order_id => {
-                let orderindex = self.orders.findIndex(order => order.id == order_id);
+                let orderindex = self.orders.findIndex(
+                  order => order.id == order_id
+                );
                 if (orderindex > -1) {
                   self.orders.splice(orderindex, 1);
                 }
-              })
-              swalService.showModal('削除された!', '注文は削除されました.', 'success')
-            })
+              });
+              swalService.showModal(
+                "削除された!",
+                "注文は削除されました.",
+                "success"
+              );
+            });
         } else {
-          Swal.fire("Warning", "Only NEW orders can be removed", "warning")
+          Swal.fire("Warning", "Only NEW orders can be removed", "warning");
         }
       } else {
-        Swal.fire("Warning", "you have to choose more than one", "warning")
+        Swal.fire("Warning", "you have to choose more than one", "warning");
       }
     },
     handleSelectionChange(val) {
-      let kl = val.map(function (order) {
-        return order.id
+      let kl = val.map(function(order) {
+        return order.id;
       });
       this.multipleSelection = kl;
     },
     isOrderPaid(order) {
       let result = true;
       order.orderitems.forEach(item => {
-        console.log("item idx:", item, item.id, item.paid)
+        console.log("item idx:", item, item.id, item.paid);
         if (!item.paid) {
           result = false;
         }
-      })
+      });
       return result;
     },
     // isOrderDelivered(order) {
@@ -254,13 +260,19 @@ export default {
         order_ids.push(ids);
         this.multipleSelection = order_ids;
       }
-      console.log("update_order_payment_status order_ids", this.multipleSelection)
+      console.log(
+        "update_order_payment_status order_ids",
+        this.multipleSelection
+      );
       this.showmodal_payment_status = true;
     },
     update_order_payment_status_result(info) {
-      console.log("update_order_payment_status_result", info)
+      console.log("update_order_payment_status_result", info);
       if (info.result) {
-        this.replaceOrderPaymentStatus(info.updateinfo.order_ids, info.updateinfo.payment_status)
+        this.replaceOrderPaymentStatus(
+          info.updateinfo.order_ids,
+          info.updateinfo.payment_status
+        );
         this.showmodal_payment_status = false;
       } else {
         this.showmodal_payment_status = false;
@@ -268,32 +280,32 @@ export default {
     },
     replaceOrderStatus(ids, status) {
       ids.forEach(id => {
-        let index = this.orders.findIndex(order => order.id === id)
+        let index = this.orders.findIndex(order => order.id === id);
         if (index > -1) {
           this.orders[index].status = status;
           this.orders[index].payment_status = status;
         }
-      })
+      });
     },
     replaceOrderPaymentStatus(ids, payment_status) {
       ids.forEach(id => {
-        let index = this.orders.findIndex(order => order.id === id)
+        let index = this.orders.findIndex(order => order.id === id);
         if (index > -1) {
           this.orders[index].payment_status = payment_status;
         }
-      })
+      });
     },
     showSendOrderMail(order) {
       this.current_order = order;
       this.showOrderModalSelector = true;
     },
     closeOrderModalSelector() {
-      console.log("index closeOrderModal")
+      console.log("index closeOrderModal");
       this.current_order = {};
       this.showOrderModalSelector = false;
     }
   },
-  middleware: ['router-auth', 'router-superadmin'],
+  middleware: ["router-auth", "router-superadmin"]
 };
 </script>
 <style>
@@ -303,7 +315,7 @@ export default {
 </style>
 <template>
   <div>
-    <PageHeader :title="title" :items="items"/>
+    <PageHeader :title="title" :items="items" />
     <div class="row">
       <div class="col-12">
         <div class="card">
@@ -315,7 +327,11 @@ export default {
                     Status: {{ order_filters.status }}
                     <i class="mdi mdi-chevron-down"></i>
                   </template>
-                  <b-dropdown-item v-for="item in status_options" :key="item.value" @click="change_status(item.value)">
+                  <b-dropdown-item
+                    v-for="item in status_options"
+                    :key="item.value"
+                    @click="change_status(item.value)"
+                  >
                     {{ item.label }}
                   </b-dropdown-item>
                 </b-dropdown>
@@ -327,12 +343,20 @@ export default {
                     <i class="mdi mdi-chevron-down"></i>
                   </template>
                   <b-dropdown-item>
-                    <a href="javascript:void(0);" v-b-modal:modal-update-payment
-                       @click="update_order_payment_status('multiple',null)">カード決済</a>
+                    <a
+                      href="javascript:void(0);"
+                      v-b-modal:modal-update-payment
+                      @click="update_order_payment_status('multiple', null)"
+                      >カード決済</a
+                    >
                   </b-dropdown-item>
                   <b-dropdown-item>
-                    <a href="javascript:void(0);" @click="batch_updateOrderStatus"
-                       v-if="order_filters.status==='DELIVERING'">注文ステータス更新</a>
+                    <a
+                      href="javascript:void(0);"
+                      @click="batch_updateOrderStatus"
+                      v-if="order_filters.status === 'DELIVERING'"
+                      >注文ステータス更新</a
+                    >
                   </b-dropdown-item>
                   <!--                  <b-dropdown-item>-->
                   <!--                    <a href="javascript:void(0);" @click="batch_RemoveOrders"><i class="fe-trash-2 text-danger"></i>-->
@@ -352,7 +376,8 @@ export default {
                     v-model="order_filters.ordered_at__gte"
                     align="right"
                     type="date"
-                    placeholder="開始日選択">
+                    placeholder="開始日選択"
+                  >
                   </el-date-picker>
                 </div>
               </div>
@@ -366,19 +391,25 @@ export default {
                     v-model="order_filters.ordered_at__lte"
                     align="right"
                     type="date"
-                    placeholder="開始日選択">
+                    placeholder="開始日選択"
+                  >
                   </el-date-picker>
                 </div>
               </div>
             </div>
             <div class="row mb-2">
               <div class="col-6 text-left">
-                <user_selector @SelectUser="handleSelectUser"/>
+                <user_selector @SelectUser="handleSelectUser" />
               </div>
               <div class="col-6 text-right">
-                <b-button variant="primary" v-bind:disabled="isLoading" class="btn-rounded ml-1"
-                          @click="load_orders">
-                  <b-spinner small v-if="isLoading"></b-spinner>&nbsp;&nbsp;Load Data
+                <b-button
+                  variant="primary"
+                  v-bind:disabled="isLoading"
+                  class="btn-rounded ml-1"
+                  @click="load_orders"
+                >
+                  <b-spinner small v-if="isLoading"></b-spinner>&nbsp;&nbsp;Load
+                  Data
                 </b-button>
               </div>
             </div>
@@ -393,14 +424,17 @@ export default {
             <div class="table-responsive mb-0">
               <div class="row my-2" v-if="orders_meta.total">
                 <div class="col">
-                  <div class="dataTables_paginate paging_simple_numbers float-right">
+                  <div
+                    class="dataTables_paginate paging_simple_numbers float-right"
+                  >
                     <ul class="pagination pagination-rounded">
-                      <b-pagination v-model="orders_meta.page"
-                                    pills
-                                    aria-controls="pingoproduct_table"
-                                    :total-rows="orders_meta.total"
-                                    :per-page="orders_meta.page_size"
-                                    @change="tablePageChange"
+                      <b-pagination
+                        v-model="orders_meta.page"
+                        pills
+                        aria-controls="pingoproduct_table"
+                        :total-rows="orders_meta.total"
+                        :per-page="orders_meta.page_size"
+                        @change="tablePageChange"
                       >
                       </b-pagination>
                     </ul>
@@ -412,19 +446,17 @@ export default {
                 style="width: 100%"
                 @selection-change="handleSelectionChange"
               >
-                <el-table-column
-                  type="selection"
-                  width="30">
-                </el-table-column>
+                <el-table-column type="selection" width="30"> </el-table-column>
 
                 <el-table-column type="expand">
                   <template slot-scope="props">
-                    <div v-if="props.row.message!==''">
+                    <div v-if="props.row.message !== ''">
                       <h4>Message</h4>
                       <blockquote class="blockquote">
                         <p class="mb-0">{{ props.row.message }}</p>
                         <footer class="blockquote-footer">
-                          From <cite title="Source Title">{{ props.row.user }}</cite>
+                          From
+                          <cite title="Source Title">{{ props.row.user }}</cite>
                         </footer>
                       </blockquote>
                     </div>
@@ -432,24 +464,39 @@ export default {
                 </el-table-column>
                 <el-table-column label="注文番号" sortable prop="id">
                   <template slot-scope="scope">
-                    {{ '#' + scope.row.id }}<i class=" ri-message-2-fill text-danger" v-if="scope.row.message!==''"></i>
+                    {{ "#" + scope.row.id
+                    }}<i
+                      class=" ri-message-2-fill text-danger"
+                      v-if="scope.row.message !== ''"
+                    ></i>
                   </template>
                 </el-table-column>
                 <el-table-column label="ステータス">
                   <template slot-scope="scope">
-
-                    <b-badge variant="danger" pill v-if="scope.row.status==='NEW'">{{ scope.row.status }}</b-badge>
-                    <b-badge variant="primary" pill v-if="scope.row.status==='DELIVERING'">{{
-                        scope.row.status
-                      }}
+                    <b-badge
+                      variant="danger"
+                      pill
+                      v-if="scope.row.status === 'NEW'"
+                    >
+                      {{ scope.row.status }}
                     </b-badge>
-                    <b-badge variant="warning" pill v-if="scope.row.status==='PROCESSING'">{{
-                        scope.row.status
-                      }}
+                    <b-badge
+                      variant="primary"
+                      pill
+                      v-if="scope.row.status === 'DELIVERING'"
+                      >{{ scope.row.status }}
                     </b-badge>
-                    <b-badge variant="success" pill v-if="scope.row.status==='COMPLETED'">{{
-                        scope.row.status
-                      }}
+                    <b-badge
+                      variant="warning"
+                      pill
+                      v-if="scope.row.status === 'PROCESSING'"
+                      >{{ scope.row.status }}
+                    </b-badge>
+                    <b-badge
+                      variant="success"
+                      pill
+                      v-if="scope.row.status === 'COMPLETED'"
+                      >{{ scope.row.status }}
                     </b-badge>
 
                     <!--                    <span class="badge badge-soft-danger text-danger" v-if="!isOrderDelivered(scope.row)">-->
@@ -464,7 +511,8 @@ export default {
                   label="会員"
                   sortable
                   width="100"
-                  prop="user.username">
+                  prop="user.username"
+                >
                 </el-table-column>
                 <el-table-column label="合計" sortable prop="Total">
                   <template slot-scope="scope">
@@ -473,31 +521,45 @@ export default {
                 </el-table-column>
                 <el-table-column label="サプライヤー">
                   <template slot-scope="scope">
-                    <b-badge variant="danger" class="text-white" pill v-if="!scope.row.supplier_paid">未払い</b-badge>
-                    <b-badge variant="success" class="text-white" pill v-else>支払済み</b-badge>
+                    <b-badge
+                      variant="danger"
+                      class="text-white"
+                      pill
+                      v-if="!scope.row.supplier_paid"
+                      >未払い</b-badge
+                    >
+                    <b-badge variant="success" class="text-white" pill v-else
+                      >支払済み</b-badge
+                    >
                   </template>
                 </el-table-column>
                 <el-table-column
                   label="受注日"
                   sortable
                   width="100"
-                  prop="ordered_at">
+                  prop="ordered_at"
+                >
                   <template slot-scope="scope">
                     {{ scope.row.ordered_at | short_date }}
                   </template>
                 </el-table-column>
-                <el-table-column
-                  label="Action">
+                <el-table-column label="Action">
                   <template slot-scope="scope">
                     <ul class="list-inline table-action m-0">
                       <li class="list-inline-item">
-                        <nuxt-link :to="'/superadmin/orders/' + scope.row.id" class="action-icon text-success">
-                          <i class="fe-edit"></i></nuxt-link>
-
+                        <nuxt-link
+                          :to="'/superadmin/orders/' + scope.row.id"
+                          class="action-icon text-success"
+                          ><i class="fe-edit"></i
+                        ></nuxt-link>
                       </li>
                       <li class="list-inline-item">
-                        <a href="javascript:void(0)" v-b-modal:modal-send-order-mail-selector
-                           @click="showSendOrderMail(scope.row)" class="action-icon text-success">
+                        <a
+                          href="javascript:void(0)"
+                          v-b-modal:modal-send-order-mail-selector
+                          @click="showSendOrderMail(scope.row)"
+                          class="action-icon text-success"
+                        >
                           <i class=" fe-send"></i>
                         </a>
                       </li>
@@ -507,14 +569,17 @@ export default {
               </el-table>
               <div class="row my-2" v-if="orders_meta.total">
                 <div class="col">
-                  <div class="dataTables_paginate paging_simple_numbers float-right">
+                  <div
+                    class="dataTables_paginate paging_simple_numbers float-right"
+                  >
                     <ul class="pagination pagination-rounded">
-                      <b-pagination v-model="orders_meta.page"
-                                    pills
-                                    aria-controls="pingoproduct_table"
-                                    :total-rows="orders_meta.total"
-                                    :per-page="orders_meta.page_size"
-                                    @change="tablePageChange"
+                      <b-pagination
+                        v-model="orders_meta.page"
+                        pills
+                        aria-controls="pingoproduct_table"
+                        :total-rows="orders_meta.total"
+                        :per-page="orders_meta.page_size"
+                        @change="tablePageChange"
                       >
                       </b-pagination>
                     </ul>
@@ -526,8 +591,11 @@ export default {
         </div>
       </div>
     </div>
-    <UpdatePaymentModal :openModal="showmodal_payment_status" :order_ids="multipleSelection"
-                        @updateResult="update_order_payment_status_result"></UpdatePaymentModal>
+    <UpdatePaymentModal
+      :openModal="showmodal_payment_status"
+      :order_ids="multipleSelection"
+      @updateResult="update_order_payment_status_result"
+    ></UpdatePaymentModal>
     <SendOrderMailSelector
       :order="current_order"
       :showModal="showOrderModalSelector"
