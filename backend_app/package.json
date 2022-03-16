@@ -65,6 +65,7 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^7.22.0",
     "eslint-plugin-nuxt": "^2.0.0",
+    "eslint-plugin-unused-imports": "^2.0.0",
     "eslint-plugin-vue": "^7.7.0",
     "node-sass": "^5.0.0",
     "nuxt-vite": "^0.2.2",

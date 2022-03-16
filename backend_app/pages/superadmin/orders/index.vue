@@ -2,7 +2,6 @@
 import {mapGetters} from "vuex"
 import Swal from "sweetalert2";
 import {orderService} from "~/helpers/order.service"
-import {userService} from "@/helpers/user.service";
 
 export default {
   name: "order_detail",
