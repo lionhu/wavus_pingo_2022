@@ -1,8 +1,8 @@
 {
     // "editor.fontFamily": "Fira Code, Consolas", //调整字体，Fira Code
-    "editor.detectIndentation": false,// vscode默认启用了根据文件类型自动设置tabsize的选项
-    "editor.tabSize": 4,            // 重新设定tabsize
-    "editor.formatOnSave": true,        // #每次保存的时候自动格式化 
+    "editor.detectIndentation": false, // vscode默认启用了根据文件类型自动设置tabsize的选项
+    "editor.tabSize": 4, // 重新设定tabsize
+    "editor.formatOnSave": true, // #每次保存的时候自动格式化
     "editor.formatOnPaste": true,
     "editor.formatOnType": false,
     "editor.suggestSelection": "first",
@@ -30,21 +30,18 @@
         "*.js": "javascript",
         "*.cjson": "jsonc",
         "*.wxss": "css",
-        "*.wxs": "javascript",
+        "*.wxs": "javascript"
         // "*.wpy": "vue"
     },
- 
-    
-    //  #去掉代码结尾的分号 
+    //  #去掉代码结尾的分号
     "prettier.semi": false,
-    //  #使用带引号替代双引号 
+    //  #使用带引号替代双引号
     "prettier.singleQuote": true,
     "prettier.trailingComma": "none",
     //  #让函数(名)和后面的括号之间加个空格
     "javascript.format.insertSpaceBeforeFunctionParenthesis": true,
-    // #让vue中的js按编辑器自带的ts格式进行格式化 
+    // #让vue中的js按编辑器自带的ts格式进行格式化
     "vetur.format.defaultFormatter.js": "prettier-eslint",
- 
     "git.ignoreMissingGitWarning": true,
     "git.confirmSync": false,
     "git.autofetch": true,
@@ -63,8 +60,89 @@
     },
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "eslint.format.enable": true,
-
-    // "eslint.rules.customizations": [
-    //     { "rule": "unused-imports/no-unused-imports", "severity": "info" },
-    // ]
+    "i18nJsonEditor.supportedFolders": [
+        "locales"
+    ],
+    "better-comments.multilineComments": true,
+    "better-comments.highlightPlainText": false,
+    "better-comments.tags": [
+        {
+            "tag": "!",
+            "color": "#FF2D00",
+            "strikethrough": false,
+            "underline": false,
+            "backgroundColor": "transparent",
+            "bold": false,
+            "italic": false
+        },
+        {
+            "tag": "?",
+            "color": "#3498DB",
+            "strikethrough": false,
+            "underline": false,
+            "backgroundColor": "transparent",
+            "bold": false,
+            "italic": false
+        },
+        {
+            "tag": "//",
+            "color": "#474747",
+            "strikethrough": true,
+            "underline": false,
+            "backgroundColor": "transparent",
+            "bold": false,
+            "italic": false
+        },
+        {
+            "tag": "todo",
+            "color": "#FF8C00",
+            "strikethrough": false,
+            "underline": false,
+            "backgroundColor": "transparent",
+            "bold": false,
+            "italic": false
+        },
+        {
+            "tag": "*",
+            "color": "#98C379",
+            "strikethrough": false,
+            "underline": false,
+            "backgroundColor": "transparent",
+            "bold": false,
+            "italic": false
+        },
+        {
+            "tag": "FIXME",
+            "strikethrough": false,
+            "backgroundColor": "transparent",
+            "color": "green",
+        },
+        {
+            "tag": "NOTE",
+            "strikethrough": false,
+            "backgroundColor": "transparent",
+            "color": "#C0C0C0",
+        },
+        {
+            "tag": "TODO",
+            "strikethrough": false,
+            "backgroundColor": "transparent",
+            "color": "#FF5F17",
+        },
+        {
+            "tag": "WARNING",
+            "strikethrough": false,
+            "backgroundColor": "transparent",
+            "color": "red",
+        },
+        {
+            "tag": "BUG",
+            "strikethrough": false,
+            "backgroundColor": "transparent",
+            "color": "#2C7CFF",
+        }
+    ],
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.python"
+    }
 }

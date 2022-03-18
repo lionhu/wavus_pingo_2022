@@ -133,6 +133,22 @@ default_settings = {
     "SEND_SUPERADMIN_NEW_ORDER_EMAIL": True,
     "SEND_MEMBER_NEW_ORDER_EMAIL": True,
     "SUPPLIER_AUTO_SEND_NEW_ORDERITEM_EMAIL": True,
+    "NOTIFICATIONS": {
+        "SUPERADMIN_USER_ACTIVATION": True,
+        "CLIENT_ADMIN_ACTIVATION": True,
+        "SUPERADMIN_USER_REGISTER": True,
+        "CLIENT_ADMIN_REGISTER": True,
+
+        
+        "USER_NEW_ORDER": True,
+        "SUPERADMIN_NEW_ORDER": True,
+        "SUPPLIER_NEW_ORDER": False,
+
+        "USER_ORDER_DELIVERED": True,
+        "SUPERADMIN_ORDER_DELIVERED": True,
+        "SUPPLIER_ORDER_DELIVERED": False,
+
+    },
     "EMAIL": ObjDict(
         {
             "common_notification": "store.emails.CommonNotificationEmail",

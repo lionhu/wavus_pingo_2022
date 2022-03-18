@@ -10,7 +10,7 @@ from store.mixins import DynamicQuerySetMixin, OrderMixin, OrderPointDistributio
     PointBankMixin, SquarePaymentMixin
 from pingo.conf import settings as pingo_settings
 from store.signals import signalOrderItemStatusChanged, signalOrderItemSupplierPaymentChanged
-from store.exceptions import GenerateOrderError_InsufficientPoint, GenerateOrderError_CreditCardFailed
+from store.exceptions import GenerateOrderError_InsufficientPoint, GenerateOrderError_CreditCardFailed, Cancel_CreditCard_Payment_Failed
 from core.functions import PrintExceptionError
 from django.contrib.auth import get_user_model
 
@@ -260,48 +260,6 @@ class OrderViewSet(DynamicQuerySetMixin,
         }, status=status.HTTP_200_OK)
 
     @action(detail=True, methods=['post'])
-    def set_status_completed(self, request, pk=None, *args, **kwargs):
-        try:
-            order = Order.objects.get(pk=pk, user=request.user)
-            payment = {}
-
-            if order.status == "DELIVERING" and order.payment_status == "APPROVED" and order.payment_id != "":
-                payment = self.order_complete_payment(order.payment_id)
-                order.payment_status = "COMPLETED"
-                order.status = "COMPLETED"
-                order.payment_info = payment["payment_details"]
-                order.save()
-
-                OrderItem.objects.filter(
-                    order=order).update(status="COMPLETED")
-                Margin.objects.filter(
-                    from_orderID=order.id).update(is_valid=True)
-
-                order_margins = Margin.objects.filter(from_orderID=order.id)
-                if order_margins.exists():
-                    self.create_pointbank_from_margins(order_margins)
-
-                return Response({
-                    "message": "COMPLETE order sucessfully!",
-                    "order_id": pk
-                }, status=status.HTTP_200_OK)
-            else:
-                return Response({
-                    "error": "Doesn't meet Compete conditions",
-                }, status=status.HTTP_400_BAD_REQUEST)
-
-        except GenerateOrderError_CreditCardFailed as err:
-            return Response({
-                "error_code": "creditcard_payment_complete_failed",
-                "message": "Failed to complete creditcard payment"
-            }, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as err:
-            return Response({
-                "error_code": "",
-                "message": PrintExceptionError(err)
-            }, status=status.HTTP_400_BAD_REQUEST)
-
-    @action(detail=True, methods=['post'])
     def send_notify_email(self, request, pk=None, *args, **kwargs):
         try:
             mail_type = request.data.get("mail_type", None)
@@ -341,13 +299,21 @@ class OrderViewSet(DynamicQuerySetMixin,
             update_fields = request.data.get("update_fields", [])
             update_info = request.data.get("update_info", {})
 
-            logger.error(request.data)
             if "status" in update_fields:
                 Order.objects.filter(pk__in=ids).update(**update_info)
-                
-                # TODO: add tasks for different status
-                
-                
+                print("update status")
+
+                # TODO: add action according to  different status
+
+            if "supplier_paid" in update_fields:
+                Order.objects.filter(pk__in=ids).update(**update_info)
+                print("update supplier_paid")
+
+                # TODO: add notification for supplier about payment ?
+
+            # if "payment_status" in update_fields:
+            #     print("update supplier_paid")
+
             # if "delivery" in update_fields:
             #     logistic_id = request.data.get("logistic_id", None)
             #     delivery_info = request.data.get("delivery_info", None)
@@ -379,7 +345,6 @@ class OrderViewSet(DynamicQuerySetMixin,
 
             # serializer_orderitems = self.get_serializer(instance=orderitems, many=True)
 
-            logger.error(request.data)
             return Response({
                 "ids": ids
             }, status=status.HTTP_200_OK)
@@ -400,33 +365,60 @@ class OrderViewSet(DynamicQuerySetMixin,
                     "message": "update_fields is required",
                 }, status=status.HTTP_400_BAD_REQUEST)
 
-            update_info = request.data.get("update_info", {})
-            Order.objects.filter(pk=pk).update(**update_info)
+            update_info = request.data.get("update_info", None)
 
             if "delivery" in update_fields:
-                update_info = request.data.get("update_info", None)
-                if update_info and update_info["delivered"]:
-                    if pingo_settings.NOTIFICATIONS["USER_ORDER_DELIVERED"]:
-                        pingo_settings.TASKS.notify_member_order_delivered(pk, update_info)
+                # update_info = request.data.get("update_info", None)
 
-                    if pingo_settings.NOTIFICATIONS["SUPERADMIN_ORDER_DELIVERED"]:
-                        pingo_settings.TASKS.notify_superadmin_order_delivered(pk, update_info)
+                Order.objects.filter(pk=pk).update(**update_info)
+                print(f"delivery {update_info['delivered']}")
+
+                # if update_info and update_info["delivered"]:
+                #     if pingo_settings.NOTIFICATIONS["USER_ORDER_DELIVERED"]:
+                #         pingo_settings.TASKS.notify_member_order_delivered(
+                #             pk, update_info)
+
+                #     if pingo_settings.NOTIFICATIONS["SUPERADMIN_ORDER_DELIVERED"]:
+                #         pingo_settings.TASKS.notify_superadmin_order_delivered(
+                #             pk, update_info)
 
             if "status" in update_fields:
                 _status = update_info["status"]
+                Order.objects.filter(pk=pk).update(**update_info)
                 print(f"status update_fields {_status}")
+
+                # TODO: add action according to different status
+
                 # if _status == "PROCESSING":
                 #     pingo_settings.TASKS.notify_supplier_order(pk)
+
+            if "payment_status" in update_fields:
+                order = Order.objects.get(pk=pk)
+                _payment_status = update_info.get("payment_status", None)
+
+                if _payment_status == "COMPLETED":
+                    self.complete_order_approved_payment(order)
+                    print("payment_status completed!")
+
+                    # TODO: send user about credit card completed notification?
+
+                elif _payment_status == "CANCELED":
+                    self.cancel_order_approved_payment(order)
+                    print("payment_status canceled!")
+
+                    # TODO: send user about credit card canceled notification?
+
+                print("update supplier_paid")
 
             return Response({
                 "order_id": pk
             }, status=status.HTTP_200_OK)
+
         except Exception as err:
             return Response({
                 "error": "ORDER_UPDATE_02",
                 "message": PrintExceptionError(err),
             }, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 class OrderItemViewSet(DynamicQuerySetMixin, ModelViewSet):
@@ -461,19 +453,22 @@ class OrderItemViewSet(DynamicQuerySetMixin, ModelViewSet):
                 orderitems = OrderItem.objects.filter(pk__in=orderitem_ids)
                 if delivered:
                     for _item in orderitems:
-                        signalOrderItemStatusChanged.send(_item, status="DELIVERING")
+                        signalOrderItemStatusChanged.send(
+                            _item, status="DELIVERING")
 
             if "pay_supplier" in update_fields:
                 pay_supplier_info = request.data.get("pay_supplier_info", {})
                 supplier_paid = pay_supplier_info["paid"]
-                OrderItem.objects.filter(pk__in=orderitem_ids).update(**pay_supplier_info)
+                OrderItem.objects.filter(
+                    pk__in=orderitem_ids).update(**pay_supplier_info)
 
                 orderitems = OrderItem.objects.filter(pk__in=orderitem_ids)
                 if supplier_paid:
                     for _item in orderitems:
                         signalOrderItemSupplierPaymentChanged.send(_item)
 
-            serializer_orderitems = self.get_serializer(instance=orderitems, many=True)
+            serializer_orderitems = self.get_serializer(
+                instance=orderitems, many=True)
 
             logger.error(request.data)
             return Response({
@@ -493,8 +488,10 @@ class OrderItemViewSet(DynamicQuerySetMixin, ModelViewSet):
             logger.error(filters)
             orderitems_data = []
             if filters is not None:
-                orderitems = OrderItem.objects.filter(**filters).order_by("-id")
-                serializer = self.get_serializer(instance=orderitems, many=True)
+                orderitems = OrderItem.objects.filter(
+                    **filters).order_by("-id")
+                serializer = self.get_serializer(
+                    instance=orderitems, many=True)
                 orderitems_data = serializer.data
             return Response({
                 "results": orderitems_data

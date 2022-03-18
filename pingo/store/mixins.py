@@ -24,7 +24,8 @@ class OrderPointDistribution:
     def __init__(self, order):
         self.order = order
         self.WAVUSADMIN = User.objects.get(username=pingo_settings.SUPERUSER)
-        self.WAVUSMASTER = User.objects.get(username=pingo_settings.WAVUS_CLIENT_NAME)
+        self.WAVUSMASTER = User.objects.get(
+            username=pingo_settings.WAVUS_CLIENT_NAME)
         self.user = order.user
         self.client = self.user.profile.client
         self.parent = None
@@ -80,7 +81,8 @@ class OrderPointDistribution:
                 variation, quantity = orderitem.variation, orderitem.quantity
 
                 if variation.point_rule["is_valid"]:
-                    self.distribute_amount_point(variation, quantity, orderitem)
+                    self.distribute_amount_point(
+                        variation, quantity, orderitem)
 
     def distribute_amount_point(self, variation, quantity, orderitem):
         try:
@@ -91,26 +93,35 @@ class OrderPointDistribution:
             logger.error("finally applied margin_policy")
             logger.error(margin_policy)
 
-            user_self_point = int(variation.point_rule["policies"]["user_self"])
+            user_self_point = int(
+                variation.point_rule["policies"]["user_self"])
             parent_point = int(variation.point_rule["policies"]["level_1"])
-            grantparent_point = int(variation.point_rule["policies"]["level_2"])
-            clientadmin_point = int(variation.point_rule["policies"]["client_admin"])
-            superclientadmin_point = int(variation.point_rule["policies"]["client_superadmin"])
+            grantparent_point = int(
+                variation.point_rule["policies"]["level_2"])
+            clientadmin_point = int(
+                variation.point_rule["policies"]["client_admin"])
+            superclientadmin_point = int(
+                variation.point_rule["policies"]["client_superadmin"])
 
             if self.user and margin_policy["USER_SELF"] and user_self_point:
-                self.distribute_point(self.user, user_self_point * quantity, orderitem, "USER_SELF")
+                self.distribute_point(
+                    self.user, user_self_point * quantity, orderitem, "USER_SELF")
 
             if self.parent and margin_policy["LEVEL_1"] and parent_point:
-                self.distribute_point(self.parent, parent_point * quantity, orderitem, "LEVEL_1")
+                self.distribute_point(
+                    self.parent, parent_point * quantity, orderitem, "LEVEL_1")
 
             if self.grandparent and margin_policy["LEVEL_2"] and grantparent_point:
-                self.distribute_point(self.grandparent, grantparent_point * quantity, orderitem, "LEVEL_2")
+                self.distribute_point(
+                    self.grandparent, grantparent_point * quantity, orderitem, "LEVEL_2")
 
             if self.ClientAdmin and margin_policy["CLIENTADMIN"] and clientadmin_point:
-                self.distribute_point(self.ClientAdmin, clientadmin_point * quantity, orderitem, "CLIENTADMIN")
+                self.distribute_point(
+                    self.ClientAdmin, clientadmin_point * quantity, orderitem, "CLIENTADMIN")
 
             if self.SuperClientAdmin and margin_policy["SUPERADMIN"] and superclientadmin_point:
-                self.distribute_point(self.SuperClientAdmin, superclientadmin_point * quantity, orderitem, "SUPERADMIN")
+                self.distribute_point(
+                    self.SuperClientAdmin, superclientadmin_point * quantity, orderitem, "SUPERADMIN")
 
         except KeyError:
             pass
@@ -119,7 +130,8 @@ class OrderPointDistribution:
 
         # logger.error("self.bought_policy({}, {})".format(user.id, orderitem.item_id))
         # if user and self.bought_policy(user.id, orderitem.item_id):
-        logger.error("distribute_point to: {} with point: {},level_type:{}".format(user, amount, level_type))
+        logger.error("distribute_point to: {} with point: {},level_type:{}".format(
+            user, amount, level_type))
         Margin.objects.create(
             user=user,
             amount=amount,
@@ -145,7 +157,8 @@ class OrderPointDistribution:
         logger.error("finally applied margin_policy")
         logger.error(margin_policy)
 
-        user_self_point = int(self.order.product.point_rule["policies"]["user_self"])
+        user_self_point = int(
+            self.order.product.point_rule["policies"]["user_self"])
         if self.user and margin_policy["USER_SELF"] and self.order.product.point_rule["is_valid"] and user_self_point:
             Margin.objects.create(
                 user=self.user,
@@ -198,16 +211,17 @@ class DynamicQuerySetMixin:
 
     def set_query_sorted_by(self):
         if "sorted_by" in self.request.query_params and len(self.request.query_params["sorted_by"]) > 0:
-            self.sorted_by = tuple(self.request.query_params["sorted_by"].split(","))
+            self.sorted_by = tuple(
+                self.request.query_params["sorted_by"].split(","))
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
-        addRequestToContext = getattr(self,"dynamic_queryset", None)
-        
+        addRequestToContext = getattr(self, "dynamic_queryset", None)
+
         if addRequestToContext:
             context.update({"request": self.request})
             print("addRequestToContext")
-            
+
         return context
 
     def get_queryset(self):
@@ -288,7 +302,8 @@ class DynamicQuerySetMixin:
 class SquarePaymentMixin:
 
     def pay_order_byCreditCard(self, order_type, order, nonce):
-        logger.error("SquarePaymentMixin order id: {}, with nonce: {}".format(order.id, nonce))
+        logger.error(
+            "SquarePaymentMixin order id: {}, with nonce: {}".format(order.id, nonce))
         try:
             client = Client(access_token=pingo_settings.SQUARE_PAYMENT["ACCESSTOKEN"],
                             environment=pingo_settings.SQUARE_PAYMENT["ENV"])
@@ -321,7 +336,8 @@ class SquarePaymentMixin:
                             "message": "Square Payment Successfully placed."}
 
                 elif api_response.is_error():
-                    res = "Exception when calling PaymentsApi->create_payment: {}".format(api_response.errors)
+                    res = "Exception when calling PaymentsApi->create_payment: {}".format(
+                        api_response.errors)
                     raise GenerateOrderError_CreditCardFailed
                     # return {"result": False, "order": None, "payment_info": {}, "message": res}
         except Exception as err:
@@ -329,7 +345,8 @@ class SquarePaymentMixin:
             # return {"result": False, "order": None, "payment_info": {}, "message": PrintExceptionError(err)}
 
     def order_cancel_payment(self, payment_id):
-        logger.error("SquarePaymentMixin cancel payment_id: {}".format(payment_id))
+        logger.error(
+            "SquarePaymentMixin cancel payment_id: {}".format(payment_id))
         try:
             client = Client(access_token=pingo_settings.SQUARE_PAYMENT["ACCESSTOKEN"],
                             environment=pingo_settings.SQUARE_PAYMENT["ENV"])
@@ -340,7 +357,8 @@ class SquarePaymentMixin:
                 api_response = client.payments.cancel_payment(payment_id)
                 if api_response.is_success():
                     res = api_response.body['payment']
-                    logger.error("successfully canceled payment_info id: {}".format(res["id"]))
+                    logger.error(
+                        "successfully canceled payment_info id: {}".format(res["id"]))
 
                     return {"result": True,
                             "payment_status": res["status"],
@@ -349,7 +367,8 @@ class SquarePaymentMixin:
                             "message": "Square Payment Successfully canceled."}
 
                 elif api_response.is_error():
-                    res = "Exception when calling PaymentsApi->create_payment: {}".format(api_response.errors)
+                    res = "Exception when calling PaymentsApi->create_payment: {}".format(
+                        api_response.errors)
                     logger.error("failed to cancel creditcard payment")
                     logger.error(res)
                     raise Cancel_CreditCard_Payment_Failed
@@ -359,7 +378,8 @@ class SquarePaymentMixin:
             raise Cancel_CreditCard_Payment_Failed
 
     def order_complete_payment(self, payment_id):
-        logger.error("SquarePaymentMixin complete payment_id: {}".format(payment_id))
+        logger.error(
+            "SquarePaymentMixin complete payment_id: {}".format(payment_id))
         try:
             client = Client(access_token=pingo_settings.SQUARE_PAYMENT["ACCESSTOKEN"],
                             environment=pingo_settings.SQUARE_PAYMENT["ENV"])
@@ -370,7 +390,8 @@ class SquarePaymentMixin:
                 api_response = client.payments.complete_payment(payment_id)
                 if api_response.is_success():
                     res = api_response.body['payment']
-                    logger.error("successfully completed payment_info id: {}".format(res["id"]))
+                    logger.error(
+                        "successfully completed payment_info id: {}".format(res["id"]))
 
                     return {"result": True,
                             "payment_status": res["status"],
@@ -379,12 +400,57 @@ class SquarePaymentMixin:
                             "message": "Square Payment Successfully canceled."}
 
                 elif api_response.is_error():
-                    res = "Exception when calling PaymentsApi->create_payment: {}".format(api_response.errors)
+                    res = "Exception when calling PaymentsApi->create_payment: {}".format(
+                        api_response.errors)
                     logger.error(res)
                     raise GenerateOrderError_CreditCardFailed
         except Exception as err:
             logger.error(PrintExceptionError(err))
             raise GenerateOrderError_CreditCardFailed
+
+    def complete_order_approved_payment(self, order):
+        try:
+            payment = self.order_complete_payment(order.payment_id)
+            order.payment_status = "COMPLETED"
+            order.payment_info = payment["payment_details"]
+            order.save()
+
+            OrderItem.objects.filter(
+                order=order).update(status="COMPLETED")
+            Margin.objects.filter(
+                from_orderID=order.id).update(is_valid=True)
+
+            order_margins = Margin.objects.filter(
+                from_orderID=order.id)
+            if order_margins.exists():
+                self.create_pointbank_from_margins(order_margins)
+
+            print("payment_status completed!")
+
+        except GenerateOrderError_CreditCardFailed as err:
+            return Response({
+                "error_code": "creditcard_payment_complete_failed",
+                "message": "Failed to complete creditcard payment"
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+    def cancel_order_approved_payment(self, order):
+        try:
+            payment = self.order_cancel_payment(order.payment_id)
+            order.payment_status = "CANCELED"
+            order.payment_info = payment["payment_details"]
+            order.save()
+
+            OrderItem.objects.filter(
+                order=order).update(status="CANCELED")
+            Margin.objects.filter(from_orderID=order.id).delete()
+
+            print("payment_status canceled!")
+
+        except Cancel_CreditCard_Payment_Failed as err:
+            return Response({
+                "error_code": "creditcard_payment_canceled_failed",
+                "message": "Failed to canceled creditcard payment"
+            }, status=status.HTTP_400_BAD_REQUEST)
 
 
 class OrderMixin:
@@ -402,7 +468,8 @@ class OrderMixin:
             for cart_item in cart_items:
                 variation = cart_item["variant"]
                 quantity = cart_item["quantity"]
-                variation_check = self.check_variation_stock(variation["id"], quantity)
+                variation_check = self.check_variation_stock(
+                    variation["id"], quantity)
                 if not variation_check:
                     order_validate = False
                 cart_item["validate"] = variation_check
@@ -421,7 +488,8 @@ class OrderMixin:
         pay_by_point = bool(point_usage["apply_point"])
         cart_use_point = int(point_usage["use_point"]) if pay_by_point else 0
 
-        stock_check_validation = self.check_order_inventory(order_data["cart_items"])
+        stock_check_validation = self.check_order_inventory(
+            order_data["cart_items"])
         if not stock_check_validation["order_validate"]:
             raise ValidationError("insufficient stock")
 
@@ -432,7 +500,8 @@ class OrderMixin:
                 raise ValidationError("not enough point to pay order")
         elif 0 < chargeAmount < Total:
             if chargeAmount + cart_use_point != Total:
-                raise ValidationError("credit cart and  point does not equal total")
+                raise ValidationError(
+                    "credit cart and  point does not equal total")
 
             if not nonce:
                 raise ValidationError("nonce is required")
@@ -468,7 +537,8 @@ class PointBankMixin:
         paid_list = parent.profile.extra_info["introduction_point_paid"]
 
         if paid_list.count(user.id):
-            logger.error("parent {} has already get introduce point from".format(parent.username, user.username))
+            logger.error("parent {} has already get introduce point from".format(
+                parent.username, user.username))
         else:
             margin = Margin.objects.create(
                 user=parent,
@@ -483,7 +553,8 @@ class PointBankMixin:
                       "order_id": order.id,
                       "order_type": order.type}
             )
-            parent.profile.extra_info["introduction_point_paid"].append(user.id)
+            parent.profile.extra_info["introduction_point_paid"].append(
+                user.id)
             parent.profile.save()
 
     def distribute_self_join_point(self, user, order):
@@ -497,7 +568,8 @@ class PointBankMixin:
         logger.error(extra_info)
 
         if "join_bonus" not in extra_info or not extra_info["join_bonus"]:
-            logger.error("extra_info not in extra_info or not extra_info[join_bonus]")
+            logger.error(
+                "extra_info not in extra_info or not extra_info[join_bonus]")
             margin = Margin.objects.create(
                 user=user,
                 type="JOINBONUS_POINT",
@@ -527,33 +599,41 @@ class PointBankMixin:
     def withdraw_introduction_point(self, order_id):
         try:
 
-            margin = Margin.objects.filter(from_orderID=order_id, type="INTRODUCE_POINT").first()
+            margin = Margin.objects.filter(
+                from_orderID=order_id, type="INTRODUCE_POINT").first()
 
-            logger.error("try to remove {} introduction from order_id:{}".format(margin.fromuser_id, order_id))
+            logger.error("try to remove {} introduction from order_id:{}".format(
+                margin.fromuser_id, order_id))
             if margin:
                 parent_profile = margin.user.profile
                 if parent_profile.extra_info and parent_profile.extra_info["introduction_point_paid"]:
                     extra_info = parent_profile.extra_info["introduction_point_paid"]
-                    new_introduction_list = extra_info.remove(margin.fromuser_id)
+                    new_introduction_list = extra_info.remove(
+                        margin.fromuser_id)
                     parent_profile.extra_info[
                         "introduction_point_paid"] = new_introduction_list if new_introduction_list else []
                     parent_profile.save()
-                    logger.error(" to remove {} introduction from order_id:{}".format(margin.fromuser_id, order_id))
+                    logger.error(" to remove {} introduction from order_id:{}".format(
+                        margin.fromuser_id, order_id))
         except Exception as err:
-            logger.error("failed to remove introduction from order_id:{}".format(order_id))
+            logger.error(
+                "failed to remove introduction from order_id:{}".format(order_id))
 
     def withdraw_self_join_point(self, order_id):
         try:
-            margin = Margin.objects.filter(from_orderID=order_id, type="JOINBONUS_POINT").first()
+            margin = Margin.objects.filter(
+                from_orderID=order_id, type="JOINBONUS_POINT").first()
 
             if margin:
                 user_profile = margin.user.profile
                 if user_profile.extra_info and user_profile.extra_info["join_bonus"]:
                     user_profile.extra_info["join_bonus"] = False
                     user_profile.save()
-                    logger.error(" to remove {} join_bonus from order_id:{}".format(margin.user_id, order_id))
+                    logger.error(" to remove {} join_bonus from order_id:{}".format(
+                        margin.user_id, order_id))
         except Exception as err:
-            logger.error(" failed to  remove {} join_bonus from order_id:{}".format(margin.user_id, order_id))
+            logger.error(" failed to  remove {} join_bonus from order_id:{}".format(
+                margin.user_id, order_id))
 
     def create_pointbank_from_margin(self, margin):
         try:
@@ -589,9 +669,11 @@ class PointBankMixin:
     def pointbank_use_point(self, user_id, point):
 
         try:
-            logger.error("pointbank_use_point:user_id {}, point:{}".format(user_id, point))
+            logger.error(
+                "pointbank_use_point:user_id {}, point:{}".format(user_id, point))
 
-            pointbanks = PointBank.objects.filter(user_id=user_id).order_by("until_at")
+            pointbanks = PointBank.objects.filter(
+                user_id=user_id).order_by("until_at")
             if not pointbanks.exists():
                 return False
 
@@ -599,25 +681,30 @@ class PointBankMixin:
             for pointbank in pointbanks:
                 if pointbank.point == temp_point:
                     pointbank.delete()
-                    logger.error("remove == pointbank_{}, point:{}".format(pointbank.id, temp_point))
+                    logger.error("remove == pointbank_{}, point:{}".format(
+                        pointbank.id, temp_point))
                     break
                 if pointbank.point > temp_point:
                     pointbank.point = pointbank.point - temp_point
                     pointbank.save()
-                    logger.error("remove > pointbank_{}, point:{}".format(pointbank.id, temp_point))
+                    logger.error("remove > pointbank_{}, point:{}".format(
+                        pointbank.id, temp_point))
                     break
                 else:
                     temp_point = temp_point - pointbank.point
                     pointbank.delete()
-                    logger.error("remove < pointbank_{}, point:{}".format(pointbank.id, temp_point))
+                    logger.error("remove < pointbank_{}, point:{}".format(
+                        pointbank.id, temp_point))
         except Exception as error:
             logger.error("Failed to batch create pointbank")
             logger.error(PrintExceptionError(error))
 
     def pointbank_user_totalpoint(self, user_id):
         try:
-            logger.error("pointbank_user_totalpoint user_id:{}".format(user_id))
-            mp = PointBank.objects.filter(user_id=user_id).aggregate(total=Sum("point"))
+            logger.error(
+                "pointbank_user_totalpoint user_id:{}".format(user_id))
+            mp = PointBank.objects.filter(
+                user_id=user_id).aggregate(total=Sum("point"))
             logger.error(mp)
             return mp["total"] if mp["total"] else 0
         except Exception as error:
@@ -626,7 +713,8 @@ class PointBankMixin:
 
     def has_enough_points(self, user_id, points):
         logger.error("pointbank_user_totalpoint user_id:{}".format(user_id))
-        mp = PointBank.objects.filter(user_id=user_id).aggregate(total=Sum("point"))
+        mp = PointBank.objects.filter(
+            user_id=user_id).aggregate(total=Sum("point"))
         userpoints = int(mp["total"]) if int(mp["total"]) else 0
         return userpoints >= points
 
