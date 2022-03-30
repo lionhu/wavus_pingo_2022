@@ -42,17 +42,16 @@ services:
       - ./pingo/entrypoint.sh:/usr/src/app/entrypoint.sh #add
       - ./system/socket/daphne/:/usr/src/app/system/run//
     ports:
-     - 8000:8000
-     - 8001:8001
+      - 8000:8000
+      - 8001:8001
     restart: always
-    env_file: 
+    env_file:
       - ./pingo/.env.dev
     depends_on:
       - postgres
       - redis
-#      - selenium
-#      - elasticsearch
-    entrypoint: ["/usr/src/app/entrypoint.sh"]
+      - elasticsearch
+    entrypoint: [ "/usr/src/app/entrypoint.sh" ]
 
   postgres:
     hostname: postgres
@@ -62,7 +61,7 @@ services:
       - 5432:5432
     volumes:
       - ./system/postgres/:/var/lib/postgresql/data/
-    env_file: 
+    env_file:
       - ./system/.env.postgres
 
   celery:
@@ -70,14 +69,12 @@ services:
     hostname: celery
     restart: always
     image: lionhu/wavus_celery:v_1000
-    # build:
-    #   context: ./pingo
     volumes:
       - ./system/logs/celery/:/usr/src/logs/
       - ./pingo/:/usr/src/app/
       - ./system/supervisord/supervisord_celery.conf:/etc/supervisord_celery.conf #add
       - ./pingo/entrypoint_celery.sh:/usr/src/app/entrypoint.sh #add
-    env_file: 
+    env_file:
       - ./pingo/.env.dev
     ports:
       - 5555:5555
@@ -85,7 +82,7 @@ services:
       - postgres
       - redis
       - pingo_daphne
-#      - elasticsearch
+      - elasticsearch
     entrypoint: [ "/usr/src/app/entrypoint.sh" ]
 
   redis:
@@ -93,7 +90,7 @@ services:
     restart: always
     tty: true
     image: redis:alpine
-    env_file: 
+    env_file:
       - ./system/.env.redis
     expose:
       - 6379
@@ -102,50 +99,22 @@ services:
       - ./system/redis/conf/6379.conf:/usr/local/etc/redis/redis.conf
     command: redis-server --appendonly yes
 
-  # redis-commander:
-  #   container_name: redis_commander
-  #   image: rediscommander/redis-commander:latest
-  #   environment:
-  #     - REDIS_HOSTS=local:redis:6379
-  #     - HTTP_USER=root
-  #     - HTTP_PASSWORD=Hisshghu3500
-  #   ports:
-  #     - 8081:8081
-  #   depends_on:
-  #     - redis
-  #   links:
-  #     - redis
-
   rabbitmq:
     container_name: rabbitmq
     image: lionhu/wavus_rabbitmq:v_1
-    # image: rabbitmq:3.7.3-management
     hostname: rabbitmq
     environment:
       RABBITMQ_DEFAULT_USER: celery
       RABBITMQ_DEFAULT_PASS: password123
       RABBITMQ_DEFAULT_VHOST: my_vhost
     ports:
-     - 5672:5672
-     - 15672:15672
+      - 5672:5672
+      - 15672:15672
     volumes:
-     - rabbitmq:/var/lib/rabbitmq/mnesia/
+      - rabbitmq:/var/lib/rabbitmq/mnesia/
     expose:
       - 5672
       - 15672
-
-#  selenium:
-#    container_name: selenium
-#    image: selenium/standalone-chrome
-#    restart: always
-#    ports:
-#      - 4444:4444
-#      - 5900:5900
-#    volumes:
-#      - /dev/shm:/dev/shm
-    #vnc://localhost:5900
-    #password:secret
-
 
   elasticsearch:
     container_name: elasticsearch
@@ -162,7 +131,38 @@ services:
     ports:
       - 9200:9200
     restart: always
-#
+
+  portainer:
+    hostname: portainer
+    image: portainer/portainer-ce
+    ports:
+      - "9088:9000"
+      - "7088:8000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer:/data
+    restart: always
+    labels:
+      - "owner=lionhu"
+
+volumes:
+  rabbitmq:
+    driver: local
+  portainer:
+    driver: local
+  #  selenium:
+  #    container_name: selenium
+  #    image: selenium/standalone-chrome
+  #    restart: always
+  #    ports:
+  #      - 4444:4444
+  #      - 5900:5900
+  #    volumes:
+  #      - /dev/shm:/dev/shm
+  #vnc://localhost:5900
+  #password:secret
+
+  #
   # kibana:
   #   container_name: kibana
   #   build:
@@ -186,28 +186,35 @@ services:
   #   command: start-notebook.sh --NotebookApp.token=''
 
 
-#  pingo_front:
-#    container_name: pingo_front
-#    hostname: pingo_front
-#    build:
-#      context: ./pingo_front
-#    volumes:
-#      - ./pingo_front:/app
-#    tty: true
-#    restart: always
-#    stdin_open: true
-#    environment:
-#      - CHOKIDAR_USEPOLLING=true
-#    ports:
-#      - 3000:3000
-#    expose:
-#      - 3000
-#    links:
-#      - web
+  #  pingo_front:
+  #    container_name: pingo_front
+  #    hostname: pingo_front
+  #    build:
+  #      context: ./pingo_front
+  #    volumes:
+  #      - ./pingo_front:/app
+  #    tty: true
+  #    restart: always
+  #    stdin_open: true
+  #    environment:
+  #      - CHOKIDAR_USEPOLLING=true
+  #    ports:
+  #      - 3000:3000
+  #    expose:
+  #      - 3000
+  #    links:
+  #      - web
 
-
-volumes:
-  rabbitmq:
-    driver: local
-  jupiter:
-    driver: local
+  # redis-commander:
+  #   container_name: redis_commander
+  #   image: rediscommander/redis-commander:latest
+  #   environment:
+  #     - REDIS_HOSTS=local:redis:6379
+  #     - HTTP_USER=root
+  #     - HTTP_PASSWORD=Hisshghu3500
+  #   ports:
+  #     - 8081:8081
+  #   depends_on:
+  #     - redis
+  #   links:
+  #     - redis
