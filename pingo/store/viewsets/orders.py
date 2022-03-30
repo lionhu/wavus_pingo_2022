@@ -396,6 +396,12 @@ class OrderViewSet(DynamicQuerySetMixin,
                 order = Order.objects.get(pk=pk)
                 _payment_status = update_info.get("payment_status", None)
 
+                if order.payment_status != "APPROVED":
+                    return Response({
+                        "error": "ORDER_UPDATE_01",
+                        "message": "Only APPROVED order can be completed or cancelled.",
+                        }, status=status.HTTP_400_BAD_REQUEST)
+
                 if _payment_status == "COMPLETED":
                     self.complete_order_approved_payment(order)
                     print("payment_status completed!")

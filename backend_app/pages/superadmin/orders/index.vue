@@ -315,6 +315,7 @@ export default {
                 Swal.fire({
                     title: 'Update CreditCard Payment',
                     html: `注文対象 ID：${order_id}`,
+                    footer: '<span class="text-danger">一旦変更したら、ポイントなども確定されてしまいます。<br>再確認して下さい！</span>',
                     input: 'select',
                     inputOptions: {
                         CANCELED: 'CANCELED',
@@ -322,7 +323,7 @@ export default {
                     },
                     inputPlaceholder: 'Select action',
                     showCancelButton: true,
-                    confirmButtonText: 'Submit',
+                    confirmButtonText: '変更',
                     showLoaderOnConfirm: true,
                     preConfirm: (payment_status) => {
                         return orderService
